@@ -1,15 +1,103 @@
-# sstp_flutter
+Certainly! I've added code blocks to the Markdown file. Please find the updated content below:
 
-A new Flutter plugin project.
+```markdown
+# SstpFlutter
+
+SstpFlutter is a Flutter plugin for SSTP VPN connections. It provides a convenient way to manage SSTP VPN connections, monitor connection status, and configure various settings.
+
+## Features
+
+- Connect to SSTP VPN server
+- Monitor connection status
+- Retrieve download and upload speed
+- Enable and disable DNS
+- Enable and disable proxy
+- Save server data for quick connection
+- Check the last connection status
+- Get installed apps and manage allowed apps
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+To use this plugin, add `sstp_flutter` as a dependency in your `pubspec.yaml` file.
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```yaml
+dependencies:
+  sstp_flutter: ^1.0.0
+```
 
+Then, run `flutter pub get` to install the dependency.
+
+## Example
+
+```dart
+import 'package:sstp_flutter/sstp_flutter.dart';
+
+void main() async {
+  SstpFlutter sstpFlutter = SstpFlutter();
+
+  // Get the platform version
+  String? platformVersion = await sstpFlutter.getPlatformVersion();
+  print('Platform version: $platformVersion');
+
+  // Connect to SSTP VPN
+  await sstpFlutter.connectVpn();
+
+  // Monitor connection status
+  sstpFlutter.onResult(
+    onConnectedResult: (ConnectionTraffic traffic) {
+      print('Connected - Download Traffic: ${traffic.downloadTraffic}, Upload Traffic: ${traffic.uploadTraffic}');
+    },
+    onConnectingResult: () {
+      print('Connecting...');
+    },
+    onDisconnectedResult: () {
+      print('Disconnected');
+    },
+    onError: () {
+      print('Error occurred');
+    },
+  );
+
+  // Take VPN permission
+  await sstpFlutter.takePermission();
+
+  // Disconnect from SSTP VPN
+  await sstpFlutter.disconnect();
+
+  // Get installed apps
+  List<InstalledAppInfo> installedApps = await sstpFlutter.getInstalledApps();
+  print('Installed Apps: $installedApps');
+
+  // Get allowed apps
+  List<String> allowedApps = await sstpFlutter.getAllowedApps();
+  print('Allowed Apps: $allowedApps');
+
+  // Add apps to allowed apps
+  await sstpFlutter.addToAllowedApps(packages: ['com.example.app']);
+
+  // Enable DNS
+  await sstpFlutter.enableDns(DNS: '8.8.8.8');
+
+  // Disable DNS
+  await sstpFlutter.disableDNS();
+
+  // Enable proxy
+  await sstpFlutter.enableProxy(proxy: SSTPProxy(host: 'proxy.example.com', port: 8080));
+
+  // Disable proxy
+  await sstpFlutter.disableProxy();
+
+  // Save server data
+  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com', username: 'user', password: 'password'));
+
+  // Check last connection status
+  UtilKeys status = await sstpFlutter.checkLastConnectionStatus();
+  print('Last Connection Status: $status');
+}
+```
+
+Please note that the plugin methods may throw exceptions (`PlatformException`). Handle them appropriately in your application.
+
+## Contributions and Issues
+
+Feel free to contribute to this project by submitting pull requests or reporting issues on the [GitHub repository](https://github.com/NavidShokoufeh/sstp_flutter).
