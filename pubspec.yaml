@@ -3,6 +3,9 @@ description: SstpFlutter is a Flutter plugin for SSTP VPN connections
 version: 1.0.0
 homepage: https://github.com/NavidShokoufeh/sstp_flutter
 
+platforms:
+  android:
+
 environment:
   sdk: '>=3.1.2 <4.0.0'
   flutter: '>=3.3.0'
