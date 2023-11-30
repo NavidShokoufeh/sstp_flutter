@@ -95,3 +95,5 @@ Please note that the plugin methods may throw exceptions (`PlatformException`). 
 ## Contributions and Issues
 
 Feel free to contribute to this project by submitting pull requests or reporting issues on the [GitHub repository](https://github.com/NavidShokoufeh/sstp_flutter).
+
+This addition emphasizes that the purpose of the plugin is to provide a secure means for web surfing using SSTP VPN connections. Adjustments can be made based on your specific requirements.
