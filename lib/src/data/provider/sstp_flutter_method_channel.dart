@@ -5,30 +5,30 @@ import 'package:sstp_flutter/app_info.dart';
 import 'package:sstp_flutter/proxy.dart';
 import 'package:sstp_flutter/server.dart';
 
-
-class MethodChannelSstpFlutter{
+class MethodChannelSstpFlutter {
   final methodChannelCaller = const MethodChannel('sstp_flutter');
 
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannelCaller.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannelCaller.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
-    Future connectVpn() async{
-    try{
+  Future connectVpn() async {
+    try {
       await methodChannelCaller.invokeMethod("connect");
-    }on PlatformException catch (e){
+    } on PlatformException catch (e) {
       print(e);
-       rethrow;
+      rethrow;
     }
   }
 
-    Future disconnect() async {
-    try{
+  Future disconnect() async {
+    try {
       await methodChannelCaller.invokeMethod("disconnect");
-    }on PlatformException catch(e){
-    print(e);
-    rethrow;
+    } on PlatformException catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
@@ -38,51 +38,50 @@ class MethodChannelSstpFlutter{
   }
 
   Future vpnPermission() async {
-   try{
-     await methodChannelCaller.invokeMethod("takePermission"); 
-   }on PlatformException catch(e){
-    print(e);
-    rethrow;
-   }
+    try {
+      await methodChannelCaller.invokeMethod("takePermission");
+    } on PlatformException catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 
   Future<List<InstalledAppInfo>> getInstalledApps() async {
     List<InstalledAppInfo> appInfoList = [];
     List<dynamic> apps = await methodChannelCaller.invokeMethod("getApps");
-     appInfoList = apps.map((app) => InstalledAppInfo.create(app)).toList();
-    
+    appInfoList = apps.map((app) => InstalledAppInfo.create(app)).toList();
+
     appInfoList.sort((a, b) => a.name!.compareTo(b.name!));
     return appInfoList;
   }
 
   Future<List<String>> getAllowedApps() async {
-    List<String> caller = await methodChannelCaller.invokeMethod("getAllowedApps");//returns list of package names
+    List<String> caller = await methodChannelCaller
+        .invokeMethod("getAllowedApps"); //returns list of package names
     return caller;
   }
 
-  Future addToAllowedApps(List<String> pkgName) async{
-    var caller = await methodChannelCaller.invokeMethod("addAllowedApps",{
-      "packageName" : pkgName
-    });
+  Future addToAllowedApps(List<String> pkgName) async {
+    var caller = await methodChannelCaller
+        .invokeMethod("addAllowedApps", {"packageName": pkgName});
     return caller;
   }
 
   Future enableDNS({required String customDNS}) async {
-    await methodChannelCaller.invokeMethod("enableDns",{
-      "customDns" : customDNS
-    });
+    await methodChannelCaller
+        .invokeMethod("enableDns", {"customDns": customDNS});
   }
 
-  Future disableDNS () async {
-     await methodChannelCaller.invokeMethod("disableDns");
+  Future disableDNS() async {
+    await methodChannelCaller.invokeMethod("disableDns");
   }
 
-    Future enableProxy({required SSTPProxy proxy}) async {
-     await methodChannelCaller.invokeMethod("enableProxy",{
-      "proxyIp" : proxy.ip,
-      "proxyPort" : proxy.port,
-      "proxyUserName" : proxy.userName ?? "",
-      "proxyPassword" : proxy.password ?? "",
+  Future enableProxy({required SSTPProxy proxy}) async {
+    await methodChannelCaller.invokeMethod("enableProxy", {
+      "proxyIp": proxy.ip,
+      "proxyPort": proxy.port,
+      "proxyUserName": proxy.userName ?? "",
+      "proxyPassword": proxy.password ?? "",
     });
   }
 
@@ -91,24 +90,26 @@ class MethodChannelSstpFlutter{
   }
 
   Future saveServerData({required SSTPServer server}) async {
-    try{
-      var res =  await methodChannelCaller.invokeMethod("saveServer",{
+    try {
+      var res = await methodChannelCaller.invokeMethod("saveServer", {
         "hostName": server.host,
         "userName": server.username,
         "password": server.password
       });
       print(res);
-    }catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
   Future<UtilKeys> checkLastConnectionStatus() async {
-     UtilKeys status = await methodChannelCaller.invokeMethod("checkLastConnectionStatus");
+    UtilKeys status =
+        await methodChannelCaller.invokeMethod("checkLastConnectionStatus");
     return status;
   }
 
-  static final MethodChannelSstpFlutter _instance = MethodChannelSstpFlutter.internal();
+  static final MethodChannelSstpFlutter _instance =
+      MethodChannelSstpFlutter.internal();
   factory MethodChannelSstpFlutter() => _instance;
   MethodChannelSstpFlutter.internal();
 }

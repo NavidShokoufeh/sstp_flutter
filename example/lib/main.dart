@@ -49,78 +49,74 @@ class _MyAppState extends State<MyApp> {
                   Text("upload Speed : $downSpeed KBps"),
                 ],
               ),
-               TextField(
+              TextField(
                 controller: hostNameController,
                 decoration: InputDecoration(hintText: "host name"),
               ),
-               TextField(
+              TextField(
                 controller: userNameController,
                 decoration: InputDecoration(hintText: "user name"),
               ),
-               TextField(
+              TextField(
                 controller: passController,
                 decoration: InputDecoration(hintText: "password"),
               ),
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                  onPressed: () async {
-                    SSTPServer server = SSTPServer(
-                        host: hostNameController.text,
-                        username: userNameController.text,
-                        password: passController.text);
+                      onPressed: () async {
+                        SSTPServer server = SSTPServer(
+                            host: hostNameController.text,
+                            username: userNameController.text,
+                            password: passController.text);
 
-                    try {
-                      await sstpFlutterPlugin
-                          .takePermission()
-                          .then((value) async {
-                        await sstpFlutterPlugin
-                            .saveServerData(server: server)
-                            .then((value) async {
-                          await sstpFlutterPlugin.connectVpn();
-                        });
-                      });
-                    } catch (e) {
-                      print(e);
-                    }
+                        try {
+                          await sstpFlutterPlugin
+                              .takePermission()
+                              .then((value) async {
+                            await sstpFlutterPlugin
+                                .saveServerData(server: server)
+                                .then((value) async {
+                              await sstpFlutterPlugin.connectVpn();
+                            });
+                          });
+                        } catch (e) {
+                          print(e);
+                        }
 
-                    sstpFlutterPlugin.onResult(
-                        onConnectedResult: (ConnectionTraffic traffic) {
-                          setState(() {
-                            connectionStatus = "connected";
-                            downSpeed = traffic.downloadTraffic;
-                            upSpeed = traffic.uploadTraffic;
-                          });
-                        },
-                        onConnectingResult: () {
-                          print("onConnectingResult");
-                          setState(() {
-                            connectionStatus = "connecting";
-                          });
-                        },
-                        onDisconnectedResult: () {
-                          print("onDisconnectedResult");
-                          setState(() {
-                            connectionStatus = "disconnected";
-                            downSpeed = 0.0;
-                            upSpeed = 0.0;
-                          });
-                        },
-                        onError: () {});
-                  },
-                  child: Text("Connect")),
-                  
-                  ElevatedButton(onPressed: () async {
-                    await sstpFlutterPlugin.disconnect();
-                  }, child: Text("Disconnect"))
-
+                        sstpFlutterPlugin.onResult(
+                            onConnectedResult: (ConnectionTraffic traffic) {
+                              setState(() {
+                                connectionStatus = "connected";
+                                downSpeed = traffic.downloadTraffic;
+                                upSpeed = traffic.uploadTraffic;
+                              });
+                            },
+                            onConnectingResult: () {
+                              print("onConnectingResult");
+                              setState(() {
+                                connectionStatus = "connecting";
+                              });
+                            },
+                            onDisconnectedResult: () {
+                              print("onDisconnectedResult");
+                              setState(() {
+                                connectionStatus = "disconnected";
+                                downSpeed = 0.0;
+                                upSpeed = 0.0;
+                              });
+                            },
+                            onError: () {});
+                      },
+                      child: Text("Connect")),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await sstpFlutterPlugin.disconnect();
+                      },
+                      child: Text("Disconnect"))
                 ],
               ),
-              
-
-                  
             ],
           ),
         )),

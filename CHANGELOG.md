@@ -1,7 +1,12 @@
-## 1.0.0
+## 1.0.2
 
-* Initial release.
+* improve scores
+
 
 ## 1.0.1
 
 * supported platforms
+
+## 1.0.0
+
+* Initial release.
