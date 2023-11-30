@@ -155,25 +155,7 @@ class SstpFlutter {
     UtilKeys status = await channelHandler.checkLastConnectionStatus();
     return status;
   }
-
-  test(){
-    onResult(
-      onConnectedResult: (traffic){
-        
-      },
-      onConnectingResult: (){
-
-      },
-      onDisconnectedResult: (){
-
-      }
-    );
-    
-  }
-
    
-
-
 
   static final SstpFlutter _instance = SstpFlutter.internal();
   factory SstpFlutter() => _instance;
