@@ -20,7 +20,7 @@ To use this plugin, add `sstp_flutter` as a dependency in your `pubspec.yaml` fi
 
 ```yaml
 dependencies:
-  sstp_flutter: ^1.0.0
+  sstp_flutter: ^1.0.3
 ```
 
 Then, run `flutter pub get` to install the dependency.
