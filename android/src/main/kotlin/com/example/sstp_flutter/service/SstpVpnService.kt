@@ -1,6 +1,5 @@
 package com.example.sstp_flutter.service
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,11 +7,9 @@ import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.net.VpnService
 import android.os.Build
 import android.service.quicksettings.TileService
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.documentfile.provider.DocumentFile
@@ -53,7 +50,7 @@ import java.util.Locale
 internal const val ACTION_VPN_CONNECT = "com.example.sstp_flutter.connect"
 internal const val ACTION_VPN_DISCONNECT = "com.example.sstp_flutter.disconnect"
 
-internal const val NOTIFICATION_CHANNEL_NAME = "sstp_flutter.notification.channel"
+internal const val NOTIFICATION_CHANNEL_NAME = "com.example.sstp_flutter.notification.channel"
 
 internal const val NOTIFICATION_ERROR_ID = 1
 internal const val NOTIFICATION_RECONNECT_ID = 2
@@ -94,11 +91,12 @@ internal class SstpVpnService : VpnService() {
 //                    FlutterCaller().connecting()
                 }else{
                     val tempMap : HashMap<String,Any>  = HashMap()
-                    tempMap.put("disconnected",true)
+                    connectionStatus = OscPrefKey.Disconnected.name
+                    tempMap.put("status",connectionStatus)
                     tempMap.put("dns", dnsEnabled)
                     tempMap.put("dnsCount", dnsCount)
                     tempMap.put("error", errorConnection)
-                    connectionStatus = OscPrefKey.Disconnected.name
+
                     flutterChannel.invokeMethod("connectResponse", tempMap)
                     errorConnection = false
                 }
@@ -121,7 +119,6 @@ internal class SstpVpnService : VpnService() {
                 }
 
                 FlutterCaller().connecting()
-                connectionStatus = OscPrefKey.Connecting.name
                 controlClient?.kill(false, null)
 
                 beForegrounded()
@@ -135,7 +132,6 @@ internal class SstpVpnService : VpnService() {
                 initializeClient()
 
                 setRootState(true)
-//                FlutterCaller().connect()
 
                 Service.START_STICKY
             }
@@ -154,11 +150,12 @@ internal class SstpVpnService : VpnService() {
                 close()
 
                 val tempMap : HashMap<String,Any>  = HashMap()
-                tempMap.put("disconnected",true)
+                connectionStatus = OscPrefKey.Disconnected.name
+                tempMap.put("status",connectionStatus)
                 tempMap.put("dns", dnsEnabled)
                 tempMap.put("dnsCount", dnsCount)
                 tempMap.put("error", errorConnection)
-                connectionStatus = OscPrefKey.Disconnected.name
+
                 flutterChannel.invokeMethod("connectResponse", tempMap)
                 errorConnection = false
 
@@ -243,12 +240,15 @@ internal class SstpVpnService : VpnService() {
             Intent(this, SstpVpnService::class.java).setAction(ACTION_VPN_DISCONNECT).putExtra("manuallyDisconnected",true),
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
+        val country = prefs.getString(OscPrefKey.Country.name,"")
+        val location = prefs.getString(OscPrefKey.Location.name,"")
+
+
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_NAME).also {
             it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setAutoCancel(true)
-//            it.setSmallIcon(R.drawable.arpa_vpn_icon_vector)
-//            it.addAction(R.drawable.ic_baseline_close_24, "DISCONNECT", pendingIntent)
+            it.setContentText("Connected: $country - $location")
         }
 
         startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
@@ -257,20 +257,7 @@ internal class SstpVpnService : VpnService() {
     internal fun makeNotification(id: Int, message: String) {
         println("err msg : $message")
         errorConnection = true
-        NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_NAME).also {
-//            it.setSmallIcon(R.drawable.arpa_vpn_icon_vector)
-            it.setContentText(message)
-            it.priority = NotificationCompat.PRIORITY_HIGH
-            it.setAutoCancel(true)
 
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationManager.notify(id, it.build())
-            }
-        }
     }
 
     internal fun cancelNotification(id: Int) {

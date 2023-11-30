@@ -10,7 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: ^4.6.6
   plugin_platform_interface: ^2.0.2
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

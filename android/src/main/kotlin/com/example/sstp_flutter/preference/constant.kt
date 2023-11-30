@@ -53,7 +53,9 @@ enum class OscPrefKey {
     ON_MOBILE_DATA_CONNECTED,
     Connected,
     Connecting,
-    Disconnected
+    Disconnected,
+    Country,
+    Location
 }
 
 

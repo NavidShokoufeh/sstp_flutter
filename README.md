@@ -1,6 +1,4 @@
-Certainly! I've added code blocks to the Markdown file. Please find the updated content below:
 
-```markdown
 # SstpFlutter
 
 SstpFlutter is a Flutter plugin for SSTP VPN connections. It provides a convenient way to manage SSTP VPN connections, monitor connection status, and configure various settings.
@@ -35,9 +33,8 @@ import 'package:sstp_flutter/sstp_flutter.dart';
 void main() async {
   SstpFlutter sstpFlutter = SstpFlutter();
 
-  // Get the platform version
-  String? platformVersion = await sstpFlutter.getPlatformVersion();
-  print('Platform version: $platformVersion');
+  // Save server data
+  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com', username: 'user', password: 'password'));
 
   // Connect to SSTP VPN
   await sstpFlutter.connectVpn();
@@ -86,9 +83,6 @@ void main() async {
 
   // Disable proxy
   await sstpFlutter.disableProxy();
-
-  // Save server data
-  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com', username: 'user', password: 'password'));
 
   // Check last connection status
   UtilKeys status = await sstpFlutter.checkLastConnectionStatus();

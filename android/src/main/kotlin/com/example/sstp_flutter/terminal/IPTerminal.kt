@@ -155,8 +155,8 @@ internal class IPTerminal(private val bridge: ClientBridge) {
 
         // Calculate and log download speed based on the packet size and elapsed time
         if (elapsedTimeMillis > 0) {
-            val downloadSpeedMbps = calculateSpeedMbps(size, elapsedTimeMillis)
-            logDownloadSpeed(downloadSpeedMbps)
+            val downloadSpeedKb = calculateSpeedKb(size, elapsedTimeMillis)
+            logDownloadSpeed(downloadSpeedKb)
         }
     }
 
@@ -171,32 +171,29 @@ internal class IPTerminal(private val bridge: ClientBridge) {
         val elapsedTimeMillis = endTimeMillis - startTimeMillis
 
         if (elapsedTimeMillis > 0) {
-            val uploadSpeedMbps = calculateSpeedMbps(bytesRead, elapsedTimeMillis)
-            logUploadSpeed(uploadSpeedMbps)
+            val uploadSpeedKb = calculateSpeedKb(bytesRead, elapsedTimeMillis)
+            logUploadSpeed(uploadSpeedKb)
         }
     }
 
-    private fun calculateSpeedMbps(bytes: Int, elapsedTimeMillis: Long): Double {
+    private fun calculateSpeedKb(bytes: Int, elapsedTimeMillis: Long): Double {
         val bitsInByte = 8
+        val bytes = bytes.toDouble() // Convert bytes to double for calculations
         val bits = bytes * bitsInByte
-        val speedMbps = bits.toDouble() / (elapsedTimeMillis.toDouble() / 1000) / 1_000_000
-        return speedMbps
+        val speedKbps = bits / (elapsedTimeMillis.toDouble() / 1000) / 1_000
+        return speedKbps
     }
 
-    private suspend fun logDownloadSpeed(downloadSpeedMbps: Double) {
-        val downloadSpeedKbps = convertMbpsToKbps(downloadSpeedMbps)
-        val roundedDownloadSpeed = String.format("%.2f", downloadSpeedKbps)
+    private suspend fun logDownloadSpeed(downloadSpeedKb: Double) {
+        val roundedDownloadSpeed = String.format("%.2f", downloadSpeedKb)
         FlutterCaller().DownloadSpeed(roundedDownloadSpeed)
     }
 
-    private suspend fun logUploadSpeed(uploadSpeedMbps: Double) {
-        val uploadSpeedKbps = convertMbpsToKbps(uploadSpeedMbps)
-        val roundedUploadSpeed = String.format("%.2f", uploadSpeedKbps)
+    private suspend fun logUploadSpeed(uploadSpeedKb: Double) {
+        val roundedUploadSpeed = String.format("%.2f", uploadSpeedKb)
         FlutterCaller().UploadSpeed(roundedUploadSpeed)
     }
-    private fun convertMbpsToKbps(mbps: Double): Double {
-        return mbps * 1000
-    }
+
 
     internal fun close() {
         fd?.close()

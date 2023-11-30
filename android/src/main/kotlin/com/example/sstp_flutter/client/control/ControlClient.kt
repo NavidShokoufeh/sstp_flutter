@@ -1,6 +1,5 @@
 package com.example.sstp_flutter.client.control
 
-import com.example.sstp_flutter.MainActivity
 import com.example.sstp_flutter.client.ClientBridge
 import com.example.sstp_flutter.client.ControlMessage
 import com.example.sstp_flutter.client.OutgoingClient
@@ -49,7 +48,6 @@ internal class ControlClient(internal val bridge: ClientBridge) {
     private var chapClient: ChapClient? = null
     private var ipcpClient: IpcpClient? = null
     private var ipv6cpClient: Ipv6cpClient? = null
-    val mainActivity = MainActivity.instance
 
     private var jobMain: Job? = null
 

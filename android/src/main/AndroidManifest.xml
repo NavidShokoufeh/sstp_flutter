@@ -1,18 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.sstp_flutter">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.sstp_flutter">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-     <queries>
+    <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
     </queries>
-
+     <application
+         android:networkSecurityConfig="@xml/network_security_config"
+         tools:targetApi="n">
      <service
             android:exported="true"
             android:name=".service.SstpVpnService"
@@ -37,5 +39,6 @@
                 android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="true" />
         </service>
+     </application>
         
 </manifest>

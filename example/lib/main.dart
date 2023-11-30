@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
+import 'package:sstp_flutter/server.dart';
 import 'package:sstp_flutter/sstp_flutter.dart';
+import 'package:sstp_flutter/traffic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,35 +15,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _sstpFlutterPlugin = SstpFlutter();
+  final sstpFlutterPlugin = SstpFlutter();
+  var connectionStatus = "disconnected";
+  var downSpeed = 0.0;
+  var upSpeed = 0.0;
+
+  TextEditingController hostNameController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _sstpFlutterPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -55,8 +37,93 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+            child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Text("connectionStatus : $connectionStatus"),
+                  Text("download Speed : $downSpeed KBps"),
+                  Text("upload Speed : $downSpeed KBps"),
+                ],
+              ),
+               TextField(
+                controller: hostNameController,
+                decoration: InputDecoration(hintText: "host name"),
+              ),
+               TextField(
+                controller: userNameController,
+                decoration: InputDecoration(hintText: "user name"),
+              ),
+               TextField(
+                controller: passController,
+                decoration: InputDecoration(hintText: "password"),
+              ),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                  onPressed: () async {
+                    SSTPServer server = SSTPServer(
+                        host: hostNameController.text,
+                        username: userNameController.text,
+                        password: passController.text);
+
+                    try {
+                      await sstpFlutterPlugin
+                          .takePermission()
+                          .then((value) async {
+                        await sstpFlutterPlugin
+                            .saveServerData(server: server)
+                            .then((value) async {
+                          await sstpFlutterPlugin.connectVpn();
+                        });
+                      });
+                    } catch (e) {
+                      print(e);
+                    }
+
+                    sstpFlutterPlugin.onResult(
+                        onConnectedResult: (ConnectionTraffic traffic) {
+                          setState(() {
+                            connectionStatus = "connected";
+                            downSpeed = traffic.downloadTraffic;
+                            upSpeed = traffic.uploadTraffic;
+                          });
+                        },
+                        onConnectingResult: () {
+                          print("onConnectingResult");
+                          setState(() {
+                            connectionStatus = "connecting";
+                          });
+                        },
+                        onDisconnectedResult: () {
+                          print("onDisconnectedResult");
+                          setState(() {
+                            connectionStatus = "disconnected";
+                            downSpeed = 0.0;
+                            upSpeed = 0.0;
+                          });
+                        },
+                        onError: () {});
+                  },
+                  child: Text("Connect")),
+                  
+                  ElevatedButton(onPressed: () async {
+                    await sstpFlutterPlugin.disconnect();
+                  }, child: Text("Disconnect"))
+
+                ],
+              ),
+              
+
+                  
+            ],
+          ),
+        )),
       ),
     );
   }
