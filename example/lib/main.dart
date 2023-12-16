@@ -21,6 +21,7 @@ class _MyAppState extends State<MyApp> {
   var upSpeed = 0.0;
 
   TextEditingController hostNameController = TextEditingController();
+  TextEditingController sslPortController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
@@ -54,6 +55,10 @@ class _MyAppState extends State<MyApp> {
                 decoration: InputDecoration(hintText: "host name"),
               ),
               TextField(
+                controller: sslPortController,
+                decoration: InputDecoration(hintText: "ssl port"),
+              ),
+              TextField(
                 controller: userNameController,
                 decoration: InputDecoration(hintText: "user name"),
               ),
@@ -68,8 +73,11 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         SSTPServer server = SSTPServer(
                             host: hostNameController.text,
+                            port: int.parse(sslPortController.text),
                             username: userNameController.text,
-                            password: passController.text);
+                            password: passController.text,
+                            verifyHostName: false
+                            );
 
                         try {
                           await sstpFlutterPlugin

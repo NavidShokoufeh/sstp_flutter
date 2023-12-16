@@ -93,8 +93,10 @@ class MethodChannelSstpFlutter {
     try {
       var res = await methodChannelCaller.invokeMethod("saveServer", {
         "hostName": server.host,
+        "sslPort" : server.port,
         "userName": server.username,
-        "password": server.password
+        "password": server.password,
+        "verifyHostName" : server.verifyHostName
       });
       print(res);
     } catch (e) {

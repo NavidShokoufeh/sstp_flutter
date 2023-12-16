@@ -11,8 +11,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.PreferenceManager
 import com.example.sstp_flutter.preference.OscPrefKey
+import com.example.sstp_flutter.preference.accessor.getBooleanPrefValue
 import com.example.sstp_flutter.preference.accessor.getSetPrefValue
 import com.example.sstp_flutter.preference.accessor.setBooleanPrefValue
+import com.example.sstp_flutter.preference.accessor.setIntPrefValue
 import com.example.sstp_flutter.preference.accessor.setSetPrefValue
 import com.example.sstp_flutter.preference.accessor.setStringPrefValue
 import com.example.sstp_flutter.service.ACTION_VPN_CONNECT
@@ -202,6 +204,8 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     val hostName = call.argument<String>("hostName")
     val userName = call.argument<String>("userName")
     val password = call.argument<String>("password")
+    val sslPort = call.argument<Int>("sslPort")
+    val verifyHostName = call.argument<Boolean>("verifyHostName")
     setStringPrefValue(
       hostName ?:"", OscPrefKey.HOME_HOSTNAME,prefs
     )
@@ -211,6 +215,14 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     setStringPrefValue(
       password ?:"", OscPrefKey.HOME_PASSWORD,prefs
     )
+    setIntPrefValue(
+      sslPort ?: 443, OscPrefKey.SSL_PORT,prefs
+    )
+    if (verifyHostName == true){
+      setBooleanPrefValue(true,OscPrefKey.SSL_DO_VERIFY,prefs)
+    }else{
+      setBooleanPrefValue(false,OscPrefKey.SSL_DO_VERIFY,prefs)
+    }
   }
 
   private fun startVpnService(
