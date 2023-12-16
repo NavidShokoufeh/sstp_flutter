@@ -19,7 +19,7 @@ To use this plugin, add `sstp_flutter` as a dependency in your `pubspec.yaml` fi
 
 ```yaml
 dependencies:
-  sstp_flutter: ^1.0.3
+  sstp_flutter: ^version
 ```
 
 Then, run `flutter pub get` to install the dependency.
@@ -32,8 +32,11 @@ import 'package:sstp_flutter/sstp_flutter.dart';
 void main() async {
   SstpFlutter sstpFlutter = SstpFlutter();
 
+  // Take VPN permission
+  await sstpFlutter.takePermission();
+
   // Save server data
-  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com', username: 'user', password: 'password'));
+  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false));
 
   // Connect to SSTP VPN
   await sstpFlutter.connectVpn();
@@ -53,9 +56,6 @@ void main() async {
       print('Error occurred');
     },
   );
-
-  // Take VPN permission
-  await sstpFlutter.takePermission();
 
   // Disconnect from SSTP VPN
   await sstpFlutter.disconnect();

@@ -1,3 +1,6 @@
+## 1.0.4
+* ssl port and verify hostname
+
 ## 1.0.3
 
 * 
