@@ -1,4 +1,4 @@
-class UtilKeys {
+class SSTPConnectionStatusKeys {
   static const String CONNECTED = "Connected";
   static const String CONNECTING = "Connecting";
   static const String DISCONNECTED = "Disconnected";

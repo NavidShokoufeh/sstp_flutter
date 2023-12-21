@@ -14,10 +14,8 @@ typedef OnError = Function();
 class SstpFlutter {
   MethodChannelSstpFlutter channelHandler = MethodChannelSstpFlutter();
 
-  Future<String?> getPlatformVersion() {
-    return channelHandler.getPlatformVersion();
-  }
-
+  /// Gains result of current connection status
+  /// [OnConnected] get invoked when [ConnectionTraffic] get updates
   Future onResult(
       {OnConnected? onConnectedResult,
       OnConnecting? onConnectingResult,
@@ -33,11 +31,11 @@ class SstpFlutter {
       var arg = call.arguments;
 
       if (call.method == 'connectResponse') {
-        if (arg["status"] == UtilKeys.CONNECTED) {
+        if (arg["status"] == SSTPConnectionStatusKeys.CONNECTED) {
           onConnectedResult!(traffic);
-        } else if (arg["status"] == UtilKeys.CONNECTING) {
+        } else if (arg["status"] == SSTPConnectionStatusKeys.CONNECTING) {
           onConnectingResult!();
-        } else if (arg["status"] == UtilKeys.DISCONNECTED) {
+        } else if (arg["status"] == SSTPConnectionStatusKeys.DISCONNECTED) {
           onDisconnectedResult!();
 
           bool? error = arg["error"];
@@ -59,6 +57,19 @@ class SstpFlutter {
     channel.setMethodCallHandler(methodCallReceiver);
   }
 
+  /// Tries to take vpn permission
+  /// If user decline the permission , it will appears again when use [connectVpn] until the permission will be granted
+  Future takePermission() async {
+    try {
+      await channelHandler.vpnPermission();
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  /// Starts connection between client and provided server config in [saveServerData]
+  /// Before try to connect , make sure you have saved your server config using [saveServerData]
   Future connectVpn() async {
     try {
       var caller = await channelHandler.connectVpn();
@@ -69,36 +80,30 @@ class SstpFlutter {
     }
   }
 
-  Future takePermission() async {
+  /// Disconnects current running sstp connection
+  Future disconnect() async {
     try {
-      await channelHandler.vpnPermission();
+      await channelHandler.disconnect();
     } catch (e) {
-      print(e);
       rethrow;
     }
   }
 
-  Future disconnect() async {
-    await channelHandler.disconnect();
-  }
-
+  /// Returns all installed apps on user's device
   Future<List<InstalledAppInfo>> getInstalledApps() async {
     List<InstalledAppInfo> apps = await channelHandler.getInstalledApps();
-    //Todo
-
-    // for (var element in apps) {
-    //   pkgNAmes.add(element.packageName?? "");
-    // }
-    // await enableAllApps(channelHandler);
-    // update();
     return apps;
   }
 
+  /// Returns all allowed apps package name
+  /// These packages are allowed to get tunneled , except that they're not getting tunneled
   Future<List<String>> getAllowedApps() async {
     List<String> packages = await channelHandler.getAllowedApps();
     return packages;
   }
 
+  /// Adds provided List of package names to allowed apps to get tunneled
+  /// you can simply get installed apps package names using [getInstalledApps]
   Future addToAllowedApps({required List<String> packages}) async {
     try {
       await channelHandler.addToAllowedApps(packages);
@@ -107,6 +112,8 @@ class SstpFlutter {
     }
   }
 
+  /// Enables dns for provided connection
+  /// Note : the provided dns will be use for next connection, not current one
   Future enableDns({required String dns}) async {
     try {
       await channelHandler.enableDNS(customDNS: dns);
@@ -115,6 +122,8 @@ class SstpFlutter {
     }
   }
 
+  /// Disables dns for provided connection
+  /// Note : dns will be disabled for next connection, not current one
   Future disableDNS() async {
     try {
       await channelHandler.disableDNS();
@@ -123,6 +132,8 @@ class SstpFlutter {
     }
   }
 
+  /// Enables proxy for provided connection
+  /// Note : the provided proxy will be use for next connection, not current one
   Future enableProxy({required SSTPProxy proxy}) async {
     try {
       await channelHandler.enableProxy(proxy: proxy);
@@ -131,6 +142,8 @@ class SstpFlutter {
     }
   }
 
+  /// Disables proxy for provided connection
+  /// Note : proxy will be disabled for next connection, not current one
   Future disableProxy() async {
     try {
       await channelHandler.disableProxy();
@@ -139,17 +152,19 @@ class SstpFlutter {
     }
   }
 
+  /// Saves provided [SSTPServer] configuration.
   Future saveServerData({required SSTPServer server}) async {
     try {
       await channelHandler.saveServerData(server: server);
     } catch (e) {
-      // print(e);
-      // rethrow;
+      rethrow;
     }
   }
 
-  Future<UtilKeys> checkLastConnectionStatus() async {
-    UtilKeys status = await channelHandler.checkLastConnectionStatus();
+  /// Returns last connection status
+  Future<SSTPConnectionStatusKeys> checkLastConnectionStatus() async {
+    SSTPConnectionStatusKeys status =
+        await channelHandler.checkLastConnectionStatus();
     return status;
   }
 

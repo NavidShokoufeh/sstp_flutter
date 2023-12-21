@@ -93,12 +93,12 @@ class MethodChannelSstpFlutter {
     try {
       var res = await methodChannelCaller.invokeMethod("saveServer", {
         "hostName": server.host,
-        "sslPort" : server.port,
+        "sslPort": server.port,
         "userName": server.username,
         "password": server.password,
-        "verifyHostName" : server.verifyHostName,
-        "showDisconnectOnNotification" : server.showDisconnectOnNotification,
-        "notificationText" : server.notificationText
+        "verifyHostName": server.verifyHostName,
+        "showDisconnectOnNotification": server.showDisconnectOnNotification,
+        "notificationText": server.notificationText
       });
       print(res);
     } catch (e) {
@@ -106,8 +106,8 @@ class MethodChannelSstpFlutter {
     }
   }
 
-  Future<UtilKeys> checkLastConnectionStatus() async {
-    UtilKeys status =
+  Future<SSTPConnectionStatusKeys> checkLastConnectionStatus() async {
+    SSTPConnectionStatusKeys status =
         await methodChannelCaller.invokeMethod("checkLastConnectionStatus");
     return status;
   }

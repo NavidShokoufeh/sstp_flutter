@@ -7,13 +7,12 @@ class SSTPServer {
   final bool? showDisconnectOnNotification;
   final String? notificationText;
 
-  SSTPServer({
-    required this.host,
-    this.port,
-    required this.username,
-    required this.password,
-    this.verifyHostName = false,
-    this.showDisconnectOnNotification = false,
-    this.notificationText = "Connected"
-  });
+  SSTPServer(
+      {required this.host,
+      this.port,
+      required this.username,
+      required this.password,
+      this.verifyHostName = false,
+      this.showDisconnectOnNotification = false,
+      this.notificationText = "Connected"});
 }
