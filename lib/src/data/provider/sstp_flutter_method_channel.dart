@@ -96,7 +96,9 @@ class MethodChannelSstpFlutter {
         "sslPort" : server.port,
         "userName": server.username,
         "password": server.password,
-        "verifyHostName" : server.verifyHostName
+        "verifyHostName" : server.verifyHostName,
+        "showDisconnectOnNotification" : server.showDisconnectOnNotification,
+        "notificationText" : server.notificationText
       });
       print(res);
     } catch (e) {

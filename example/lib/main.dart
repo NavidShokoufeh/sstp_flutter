@@ -76,7 +76,9 @@ class _MyAppState extends State<MyApp> {
                             port: int.parse(sslPortController.text),
                             username: userNameController.text,
                             password: passController.text,
-                            verifyHostName: false
+                            verifyHostName: false,
+                            showDisconnectOnNotification: true,
+                            notificationText: "HAHAHA"
                             );
 
                         try {

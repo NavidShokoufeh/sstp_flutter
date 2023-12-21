@@ -54,8 +54,8 @@ enum class OscPrefKey {
     Connected,
     Connecting,
     Disconnected,
-    Country,
-    Location
+    NotificationText,
+    NOTIFICATION_DO_SHOW_DISCONNECT
 }
 
 

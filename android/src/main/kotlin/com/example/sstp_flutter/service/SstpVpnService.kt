@@ -240,15 +240,20 @@ internal class SstpVpnService : VpnService() {
             Intent(this, SstpVpnService::class.java).setAction(ACTION_VPN_DISCONNECT).putExtra("manuallyDisconnected",true),
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
-        val country = prefs.getString(OscPrefKey.Country.name,"")
-        val location = prefs.getString(OscPrefKey.Location.name,"")
+        val notificationText = prefs.getString(OscPrefKey.NotificationText.name,"")
+        val showNotification = prefs.getBoolean(OscPrefKey.NOTIFICATION_DO_SHOW_DISCONNECT.name,false)
+        println("notificationText : $notificationText")
+        println("showNotification : $showNotification")
 
 
 
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_NAME).also {
             it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setAutoCancel(true)
-            it.setContentText("Connected: $country - $location")
+            it.setContentText(notificationText)
+            if(showNotification){
+                it.addAction(0, "DISCONNECT", pendingIntent)
+            }
         }
 
         startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
