@@ -103,7 +103,7 @@ If you find this project helpful, consider supporting it by making a donation. M
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/navidshokoufeh)
 
-[!["زرین پال"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://zarinp.al/navid_shokoufeh)
+[!["زرین پال"](https://cdn.zarinpal.com/badges/trustLogo/1.png)](https://zarinp.al/navid_shokoufeh)
 
 - **Bitcoin (BTC):** `bc1qgwfqm5e3fhyw879ycy23zljcxl2pvs575c3j7w`
 - **Ethereum (ETH):** `0x7Db7D431B170bCC9D1DF005226dd2434Df51e470`
