@@ -20,8 +20,7 @@
             android:name=".service.SstpVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:enabled="true"
-            android:persistent="true"
-            android:icon="@mipmap/ic_launcher">
+            android:persistent="true">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
@@ -30,7 +29,6 @@
          <service
             android:exported="true"
             android:name=".service.SstpTileService"
-            android:icon="@mipmap/ic_launcher"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
