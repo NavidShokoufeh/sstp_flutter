@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
                             password: passController.text,
                             verifyHostName: false,
                             showDisconnectOnNotification: true,
-                            notificationText: "HAHAHA"
+                            notificationText: "Notification Text Holder"
                             );
 
                         try {

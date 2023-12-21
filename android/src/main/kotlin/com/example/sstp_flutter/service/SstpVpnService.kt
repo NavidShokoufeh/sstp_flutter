@@ -250,6 +250,7 @@ internal class SstpVpnService : VpnService() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_NAME).also {
             it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setAutoCancel(true)
+            it.setSmallIcon(R.drawable.flutterlogo)
             it.setContentText(notificationText)
             if(showNotification){
                 it.addAction(0, "DISCONNECT", pendingIntent)
