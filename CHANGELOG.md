@@ -1,3 +1,6 @@
+## 1.0.5
+* [fix] build error
+
 ## 1.0.4
 * ssl port and verify hostname
 
