@@ -4,6 +4,7 @@ class SSTPServer {
   final String username;
   final String password;
   final bool? verifyHostName;
+  final bool? useTrustedCert;
   final bool? showDisconnectOnNotification;
   final String? notificationText;
 
@@ -13,6 +14,7 @@ class SSTPServer {
       required this.username,
       required this.password,
       this.verifyHostName = false,
+      this.useTrustedCert = false,
       this.showDisconnectOnNotification = false,
       this.notificationText = "Connected"});
 }

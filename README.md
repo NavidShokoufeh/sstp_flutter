@@ -31,12 +31,16 @@ import 'package:sstp_flutter/sstp_flutter.dart';
 
 void main() async {
   SstpFlutter sstpFlutter = SstpFlutter();
+  var cert_dir = "";
 
   // Take VPN permission
   await sstpFlutter.takePermission();
 
   // Save server data
-  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false));
+  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false, useTrustedCert: false, showDisconnectOnNotification: true, notificationText: "Notification Text Holder"));
+
+  // Opens files and then returns selected directory path
+  cert_dir = await sstpFlutterPlugin.addCertificate();
 
   // Connect to SSTP VPN
   await sstpFlutter.connectVpn();

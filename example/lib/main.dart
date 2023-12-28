@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final sstpFlutterPlugin = SstpFlutter();
   var connectionStatus = "disconnected";
+  var cert_dir = "none";
   var downSpeed = 0.0;
   var upSpeed = 0.0;
 
@@ -44,10 +45,12 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("connectionStatus : $connectionStatus"),
                   Text("download Speed : $downSpeed KBps"),
                   Text("upload Speed : $downSpeed KBps"),
+                  Text("certificate dir : $cert_dir"),
                 ],
               ),
               TextField(
@@ -77,6 +80,7 @@ class _MyAppState extends State<MyApp> {
                             username: userNameController.text,
                             password: passController.text,
                             verifyHostName: false,
+                            useTrustedCert: true,
                             showDisconnectOnNotification: true,
                             notificationText: "Notification Text Holder"
                             );
@@ -127,6 +131,14 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Disconnect"))
                 ],
               ),
+              ElevatedButton(
+                      onPressed: () async {
+                         cert_dir = await sstpFlutterPlugin.addCertificate();
+                        setState((){
+                         
+                        });
+                      },
+                      child: Text("Certificate"))
             ],
           ),
         )),

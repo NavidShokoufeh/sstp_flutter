@@ -168,6 +168,12 @@ class SstpFlutter {
     return status;
   }
 
+  /// Opens files and then returns selected directory path
+  Future<String> addCertificate() async {
+    String caller = await channelHandler.addCertificate();
+    return caller;
+  }
+
   static final SstpFlutter _instance = SstpFlutter.internal();
   factory SstpFlutter() => _instance;
   SstpFlutter.internal();

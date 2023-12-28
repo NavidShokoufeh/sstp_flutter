@@ -13,10 +13,13 @@ import androidx.preference.PreferenceManager
 import com.example.sstp_flutter.preference.OscPrefKey
 import com.example.sstp_flutter.preference.accessor.getBooleanPrefValue
 import com.example.sstp_flutter.preference.accessor.getSetPrefValue
+import com.example.sstp_flutter.preference.accessor.getURIPrefValue
 import com.example.sstp_flutter.preference.accessor.setBooleanPrefValue
 import com.example.sstp_flutter.preference.accessor.setIntPrefValue
 import com.example.sstp_flutter.preference.accessor.setSetPrefValue
 import com.example.sstp_flutter.preference.accessor.setStringPrefValue
+import com.example.sstp_flutter.preference.accessor.setURIPrefValue
+import com.example.sstp_flutter.preference.custom.DirectoryPreference
 import com.example.sstp_flutter.service.ACTION_VPN_CONNECT
 import com.example.sstp_flutter.service.ACTION_VPN_DISCONNECT
 import com.example.sstp_flutter.service.SstpVpnService
@@ -40,17 +43,32 @@ var assignedIp = ""
 
 /** SstpFlutterPlugin by Navid Shokoufeh*/
 class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, FlutterFragmentActivity() {
+  var activityResultListener: PluginRegistry.ActivityResultListener? = null
   private lateinit var activityBinding: ActivityPluginBinding
-  lateinit var prefs : SharedPreferences
-
-  lateinit var context : Context
-
   private lateinit var channel : MethodChannel
+  lateinit var prefs : SharedPreferences
+  lateinit var context : Context
+  lateinit var  tempResult : Result
+
+  private val certDirLauncher = PluginRegistry.ActivityResultListener { req, res, data ->
+
+    val uri = if (res == Activity.RESULT_OK) data?.data?.also {
+      context.contentResolver.takePersistableUriPermission(
+        it, Intent.FLAG_GRANT_READ_URI_PERMISSION
+      )
+    } else null
+
+    setURIPrefValue(uri, OscPrefKey.SSL_CERT_DIR, prefs)
+    Thread{
+      tempResult.success(getURIPrefValue(OscPrefKey.SSL_CERT_DIR, prefs).toString())
+    }.start()
+    true
+  }
+
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "sstp_flutter")
     channel.setMethodCallHandler(this)
-    println("bf prefs")
     context = flutterPluginBinding.applicationContext
     prefs = PreferenceManager.getDefaultSharedPreferences(flutterPluginBinding.applicationContext)
     flutterChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "responseReceiver")
@@ -62,19 +80,19 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
+    tempResult = result
     when {
       call.method.equals("takePermission") -> {
         val intent = VpnService.prepare(activityBinding.activity.applicationContext)
 
         if(intent != null){
-          println("not null")
-          var listener: PluginRegistry.ActivityResultListener? = null
-          listener = PluginRegistry.ActivityResultListener { req, res, _ ->
+
+          activityResultListener = PluginRegistry.ActivityResultListener { req, res, _ ->
             result.success(req == 0 && res == RESULT_OK)
-            listener?.let { activityBinding.removeActivityResultListener(it) }
+            activityResultListener?.let { activityBinding.removeActivityResultListener(it) }
             true
           }
-          activityBinding.addActivityResultListener(listener)
+          activityBinding.addActivityResultListener(activityResultListener!!)
           activityBinding.activity.startActivityForResult(intent, 0)
         }else{
           result.success(true)
@@ -103,7 +121,6 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
         }.start()
       }
 
-
       call.method.equals("addAllowedApps") -> {
         println("adding allowed apps")
         Thread {
@@ -113,7 +130,6 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
         }.start()
 
       }
-
 
       call.method.equals("getAllowedApps") ->{
         Thread {
@@ -126,22 +142,18 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
 
       call.method.equals("enableDns") -> {
         val dns = call.argument<String>("customDns")
-        println("enabling dns $dns")
         setBooleanPrefValue(true,OscPrefKey.DNS_DO_USE_CUSTOM_SERVER,prefs)
         if (dns != null) {
           setStringPrefValue(dns,OscPrefKey.DNS_CUSTOM_ADDRESS,prefs)
         }
         dnsEnabled = true
         dnsCount++
-        println("enabled dns")
         result.success(true)
       }
 
       call.method.equals("disableDns") -> {
-        println("disabling dns")
         setBooleanPrefValue(false,OscPrefKey.DNS_DO_USE_CUSTOM_SERVER,prefs)
         setStringPrefValue("",OscPrefKey.DNS_CUSTOM_ADDRESS,prefs)
-        println("disabled dns")
         dnsEnabled = false
         dnsCount = 0
         result.success(true)
@@ -152,7 +164,6 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
         val proxyPort = call.argument<String>("proxyPort")
         val proxyUserName = call.argument<String>("proxyUserName")
         val proxyPassword = call.argument<String>("proxyPassword")
-        println("enabling dns $proxyIp")
 
         setBooleanPrefValue(true,OscPrefKey.PROXY_DO_USE_PROXY,prefs)
 
@@ -168,17 +179,14 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
         if (proxyPassword != null) {
           setStringPrefValue(proxyPassword,OscPrefKey.PROXY_PASSWORD,prefs)
         }
-        println("enabled proxy")
       }
 
       call.method.equals("disableProxy") -> {
-        println("disabling proxy")
         setBooleanPrefValue(false,OscPrefKey.PROXY_DO_USE_PROXY,prefs)
         setStringPrefValue("",OscPrefKey.PROXY_HOSTNAME,prefs)
         setStringPrefValue("",OscPrefKey.PROXY_PORT,prefs)
         setStringPrefValue("",OscPrefKey.PROXY_USERNAME,prefs)
         setStringPrefValue("",OscPrefKey.PROXY_PASSWORD,prefs)
-        println("disabled proxy")
       }
 
       call.method.equals("checkLastConnectionStatus") -> {
@@ -193,7 +201,23 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
           result.success(true)
         }.start()
       }
+
+      call.method.equals("addTrustedCertificate") -> {
+        addTrustedCertificate()
+      }
     }
+  }
+
+  fun addTrustedCertificate(): String {
+
+    Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).also { intent ->
+      intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+      activityBinding.addActivityResultListener(certDirLauncher)
+      activityBinding.activity.startActivityForResult(intent, 0).also {
+        return getURIPrefValue(OscPrefKey.SSL_CERT_DIR, prefs).toString()
+      }
+    }
+
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -206,6 +230,7 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     val password = call.argument<String>("password")
     val sslPort = call.argument<Int>("sslPort")
     val verifyHostName = call.argument<Boolean>("verifyHostName")
+    val useTrustedCert = call.argument<Boolean>("useTrustedCert")
     val showDisconnectOnNotification = call.argument<Boolean>("showDisconnectOnNotification")
     val notificationText = call.argument<String>("notificationText")
     setStringPrefValue(
@@ -222,6 +247,7 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     )
 
     setBooleanPrefValue(showDisconnectOnNotification ?: false,OscPrefKey.NOTIFICATION_DO_SHOW_DISCONNECT,prefs)
+    setBooleanPrefValue(useTrustedCert ?: false,OscPrefKey.SSL_DO_ADD_CERT,prefs)
 
     if(!notificationText.isNullOrEmpty()){
       setStringPrefValue(

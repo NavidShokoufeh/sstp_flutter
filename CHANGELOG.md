@@ -1,3 +1,6 @@
+## 1.0.6
+* [add] notification & trusted certificate
+
 ## 1.0.5
 * [fix] build error
 
