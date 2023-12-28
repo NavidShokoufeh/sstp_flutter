@@ -97,7 +97,7 @@ class MethodChannelSstpFlutter {
         "userName": server.username,
         "password": server.password,
         "verifyHostName": server.verifyHostName,
-        "useTrustedCert" : server.useTrustedCert,
+        "useTrustedCert": server.useTrustedCert,
         "showDisconnectOnNotification": server.showDisconnectOnNotification,
         "notificationText": server.notificationText
       });
@@ -112,10 +112,10 @@ class MethodChannelSstpFlutter {
         await methodChannelCaller.invokeMethod("checkLastConnectionStatus");
     return status;
   }
-  
+
   Future<String> addCertificate() async {
-    String caller = await methodChannelCaller
-        .invokeMethod("addTrustedCertificate");
+    String caller =
+        await methodChannelCaller.invokeMethod("addTrustedCertificate");
     return caller;
   }
 

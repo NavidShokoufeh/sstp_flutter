@@ -82,8 +82,7 @@ class _MyAppState extends State<MyApp> {
                             verifyHostName: false,
                             useTrustedCert: true,
                             showDisconnectOnNotification: true,
-                            notificationText: "Notification Text Holder"
-                            );
+                            notificationText: "Notification Text Holder");
 
                         try {
                           await sstpFlutterPlugin
@@ -132,13 +131,11 @@ class _MyAppState extends State<MyApp> {
                 ],
               ),
               ElevatedButton(
-                      onPressed: () async {
-                         cert_dir = await sstpFlutterPlugin.addCertificate();
-                        setState((){
-                         
-                        });
-                      },
-                      child: Text("Certificate"))
+                  onPressed: () async {
+                    cert_dir = await sstpFlutterPlugin.addCertificate();
+                    setState(() {});
+                  },
+                  child: Text("Certificate"))
             ],
           ),
         )),
