@@ -7,6 +7,7 @@ class SSTPServer {
   final bool? useTrustedCert;
   final bool? showDisconnectOnNotification;
   final String? notificationText;
+  final String? sslVersion;
 
   SSTPServer(
       {required this.host,
@@ -15,6 +16,8 @@ class SSTPServer {
       required this.password,
       this.verifyHostName = false,
       this.useTrustedCert = false,
+      this.sslVersion,
       this.showDisconnectOnNotification = false,
-      this.notificationText = "Connected"});
+      this.notificationText = "Connected"
+      });
 }

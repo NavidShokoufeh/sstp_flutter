@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sstp_flutter/server.dart';
+import 'package:sstp_flutter/ssl_versions.dart';
 import 'package:sstp_flutter/sstp_flutter.dart';
 import 'package:sstp_flutter/traffic.dart';
 
@@ -81,6 +82,7 @@ class _MyAppState extends State<MyApp> {
                             password: passController.text,
                             verifyHostName: false,
                             useTrustedCert: true,
+                            sslVersion: SSLVersions.TLSv1_1,
                             showDisconnectOnNotification: true,
                             notificationText: "Notification Text Holder");
 

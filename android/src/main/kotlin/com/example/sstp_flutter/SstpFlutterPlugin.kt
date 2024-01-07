@@ -231,8 +231,10 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     val sslPort = call.argument<Int>("sslPort")
     val verifyHostName = call.argument<Boolean>("verifyHostName")
     val useTrustedCert = call.argument<Boolean>("useTrustedCert")
+    val sslVersion = call.argument<String>("sslVersion")
     val showDisconnectOnNotification = call.argument<Boolean>("showDisconnectOnNotification")
     val notificationText = call.argument<String>("notificationText")
+
     setStringPrefValue(
       hostName ?:"", OscPrefKey.HOME_HOSTNAME,prefs
     )
@@ -248,6 +250,10 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
 
     setBooleanPrefValue(showDisconnectOnNotification ?: false,OscPrefKey.NOTIFICATION_DO_SHOW_DISCONNECT,prefs)
     setBooleanPrefValue(useTrustedCert ?: false,OscPrefKey.SSL_DO_ADD_CERT,prefs)
+
+    setStringPrefValue(
+      sslVersion ?:"", OscPrefKey.SSL_VERSION,prefs
+    )
 
     if(!notificationText.isNullOrEmpty()){
       setStringPrefValue(
