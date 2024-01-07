@@ -37,7 +37,7 @@ void main() async {
   await sstpFlutter.takePermission();
 
   // Save server data
-  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false, useTrustedCert: false, showDisconnectOnNotification: true, notificationText: "Notification Text Holder"));
+  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false, useTrustedCert: false, sslVersion: SSLVersions.DEFAULT, showDisconnectOnNotification: true, notificationText: "Notification Text Holder"));
 
   // Opens files and then returns selected directory path
   cert_dir = await sstpFlutterPlugin.addCertificate();
