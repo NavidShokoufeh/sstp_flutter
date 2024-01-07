@@ -98,7 +98,7 @@ class MethodChannelSstpFlutter {
         "password": server.password,
         "verifyHostName": server.verifyHostName,
         "useTrustedCert": server.useTrustedCert,
-        "sslVersion" : server.sslVersion ?? "DEFAULT",
+        "sslVersion": server.sslVersion ?? "DEFAULT",
         "showDisconnectOnNotification": server.showDisconnectOnNotification,
         "notificationText": server.notificationText
       });

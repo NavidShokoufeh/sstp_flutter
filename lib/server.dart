@@ -18,6 +18,5 @@ class SSTPServer {
       this.useTrustedCert = false,
       this.sslVersion,
       this.showDisconnectOnNotification = false,
-      this.notificationText = "Connected"
-      });
+      this.notificationText = "Connected"});
 }
