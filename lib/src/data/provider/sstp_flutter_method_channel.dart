@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sstp_flutter/src/core/Utils/utils.dart';
 import 'package:sstp_flutter/app_info.dart';
 import 'package:sstp_flutter/proxy.dart';
 import 'package:sstp_flutter/server.dart';
@@ -108,8 +107,8 @@ class MethodChannelSstpFlutter {
     }
   }
 
-  Future<SSTPConnectionStatusKeys> checkLastConnectionStatus() async {
-    SSTPConnectionStatusKeys status =
+  Future<String> checkLastConnectionStatus() async {
+    String status =
         await methodChannelCaller.invokeMethod("checkLastConnectionStatus");
     return status;
   }

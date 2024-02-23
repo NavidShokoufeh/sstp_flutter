@@ -30,6 +30,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  init() async {
+    connectionStatus = await sstpFlutterPlugin.checkLastConnectionStatus();
+    setState(() {});
   }
 
   @override
@@ -52,6 +58,14 @@ class _MyAppState extends State<MyApp> {
                   Text("download Speed : $downSpeed KBps"),
                   Text("upload Speed : $downSpeed KBps"),
                   Text("certificate dir : $cert_dir"),
+                  StreamBuilder(
+                      initialData: const Duration(),
+                      stream: sstpFlutterPlugin.timer,
+                      builder: (context, timerx) {
+                        return timerx.hasData
+                            ? Text("connection time : ${timerx.data}")
+                            : const Text("connection time :no Data");
+                      })
                 ],
               ),
               TextField(

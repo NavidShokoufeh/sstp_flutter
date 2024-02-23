@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:sstp_flutter/src/core/Utils/utils.dart';
+import 'package:sstp_flutter/sstp_timer.dart';
 import 'package:sstp_flutter/traffic.dart';
 import 'package:sstp_flutter/app_info.dart';
 import 'package:sstp_flutter/proxy.dart';
@@ -13,6 +16,11 @@ typedef OnError = Function();
 
 class SstpFlutter {
   MethodChannelSstpFlutter channelHandler = MethodChannelSstpFlutter();
+  final SSTPTimer _sstpTimer = SSTPTimer();
+
+  final StreamController<Duration?> _connectionTimerStream =
+      StreamController<Duration?>();
+  Stream<Duration?> get timer => _connectionTimerStream.stream;
 
   /// Gains result of current connection status
   /// [OnConnected] get invoked when [ConnectionTraffic] get updates
@@ -32,12 +40,19 @@ class SstpFlutter {
 
       if (call.method == 'connectResponse') {
         if (arg["status"] == SSTPConnectionStatusKeys.CONNECTED) {
+          _sstpTimer.saveConnectionTime(
+              day: DateTime.now().day.toString(),
+              hour: DateTime.now().hour.toString(),
+              minute: DateTime.now().minute.toString(),
+              second: DateTime.now().second.toString());
+          _sstpTimer.startTimer(_connectionTimerStream);
           onConnectedResult!(traffic);
         } else if (arg["status"] == SSTPConnectionStatusKeys.CONNECTING) {
           onConnectingResult!();
         } else if (arg["status"] == SSTPConnectionStatusKeys.DISCONNECTED) {
           onDisconnectedResult!();
-
+          _sstpTimer.saveConnectionTime();
+          _sstpTimer.stopTimer(_connectionTimerStream);
           bool? error = arg["error"];
           if (error != null && error) onError!();
         }
@@ -162,9 +177,15 @@ class SstpFlutter {
   }
 
   /// Returns last connection status
-  Future<SSTPConnectionStatusKeys> checkLastConnectionStatus() async {
-    SSTPConnectionStatusKeys status =
-        await channelHandler.checkLastConnectionStatus();
+  Future<String> checkLastConnectionStatus() async {
+    String status = await channelHandler.checkLastConnectionStatus();
+    if (status.toString() == SSTPConnectionStatusKeys.CONNECTED) {
+      _sstpTimer.measureConnectedTime().then((value) {
+        _sstpTimer.startTimer(_connectionTimerStream);
+      });
+    } else {
+      _sstpTimer.saveConnectionTime();
+    }
     return status;
   }
 
