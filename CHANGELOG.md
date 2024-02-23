@@ -1,3 +1,6 @@
+## 1.0.8
+* [add] connection timer
+
 ## 1.0.7
 * [add] ssl version
 

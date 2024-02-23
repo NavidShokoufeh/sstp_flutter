@@ -5,7 +5,7 @@ SstpFlutter is a Flutter plugin for SSTP VPN connections. It provides a convenie
 ## Features
 
 - Connect to SSTP VPN server
-- Monitor connection status
+- Monitor connection status and duration
 - Retrieve download and upload speed
 - Enable and disable DNS
 - Enable and disable proxy
@@ -60,6 +60,16 @@ void main() async {
       print('Error occurred');
     },
   );
+
+  // Monitor connection Duration
+  StreamBuilder(
+  initialData: const Duration(),
+  stream: sstpFlutterPlugin.timer,
+  builder: (context, timer) {
+    return timer.hasData
+        ? Text("connection time : ${timer.data}")
+        : const Text("connection time :no Data");
+   })
 
   // Disconnect from SSTP VPN
   await sstpFlutter.disconnect();
