@@ -1,3 +1,6 @@
+## 1.0.9
+* [fix] bug reported in https://github.com/NavidShokoufeh/sstp_flutter/issues/8 
+
 ## 1.0.8
 * [add] connection timer
 
