@@ -111,7 +111,10 @@ class SstpFlutter {
   }
 
   /// Returns all allowed apps package name
+  ///
   /// These packages are allowed to get tunneled , except that they're not getting tunneled
+  ///
+  /// fixed bug reported in : [https://github.com/NavidShokoufeh/sstp_flutter/issues/8]
   Future<List<String>> getAllowedApps() async {
     List<String> packages = await channelHandler.getAllowedApps();
     return packages;

@@ -55,8 +55,13 @@ class MethodChannelSstpFlutter {
   }
 
   Future<List<String>> getAllowedApps() async {
-    List<String> caller = await methodChannelCaller
+    List<Object?> receiver = await methodChannelCaller
         .invokeMethod("getAllowedApps"); //returns list of package names
+    List<String> caller = [];
+
+    for (var element in receiver) {
+      caller.add(element.toString());
+    }
     return caller;
   }
 

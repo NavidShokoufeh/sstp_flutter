@@ -302,7 +302,7 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
 //  }
 
   private fun getInstalledApps(): List<Map<String, Any?>> {
-    val packageManager = packageManager
+    val packageManager = context.packageManager
     var installedApps = packageManager.getInstalledApplications(0)
     installedApps =
       installedApps.filter { app -> !isSystemApp(packageManager, app.packageName) }
