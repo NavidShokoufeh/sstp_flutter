@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final sstpFlutterPlugin = SstpFlutter();
   var connectionStatus = "disconnected";
-  var cert_dir = "none";
+  var certDir = "none";
   var downSpeed = 0.0;
   var upSpeed = 0.0;
 
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
             child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                   Text("connectionStatus : $connectionStatus"),
                   Text("download Speed : $downSpeed KBps"),
                   Text("upload Speed : $downSpeed KBps"),
-                  Text("certificate dir : $cert_dir"),
+                  Text("certificate dir : $certDir"),
                   StreamBuilder(
                       initialData: const Duration(),
                       stream: sstpFlutterPlugin.timer,
@@ -70,19 +70,19 @@ class _MyAppState extends State<MyApp> {
               ),
               TextField(
                 controller: hostNameController,
-                decoration: InputDecoration(hintText: "host name"),
+                decoration: const InputDecoration(hintText: "host name"),
               ),
               TextField(
                 controller: sslPortController,
-                decoration: InputDecoration(hintText: "ssl port"),
+                decoration: const InputDecoration(hintText: "ssl port"),
               ),
               TextField(
                 controller: userNameController,
-                decoration: InputDecoration(hintText: "user name"),
+                decoration: const InputDecoration(hintText: "user name"),
               ),
               TextField(
                 controller: passController,
-                decoration: InputDecoration(hintText: "password"),
+                decoration: const InputDecoration(hintText: "password"),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,15 +90,16 @@ class _MyAppState extends State<MyApp> {
                   ElevatedButton(
                       onPressed: () async {
                         SSTPServer server = SSTPServer(
-                            host: hostNameController.text,
-                            port: int.parse(sslPortController.text),
-                            username: userNameController.text,
-                            password: passController.text,
-                            verifyHostName: false,
-                            useTrustedCert: true,
-                            sslVersion: SSLVersions.TLSv1_1,
-                            showDisconnectOnNotification: true,
-                            notificationText: "Notification Text Holder");
+                          host: hostNameController.text,
+                          port: int.parse(sslPortController.text),
+                          username: userNameController.text,
+                          password: passController.text,
+                          verifyHostName: false,
+                          useTrustedCert: true,
+                          sslVersion: SSLVersions.TLSv1_1,
+                          showDisconnectOnNotification: true,
+                          notificationText: "Notification Text Holder",
+                        );
 
                         try {
                           await sstpFlutterPlugin
@@ -111,7 +112,7 @@ class _MyAppState extends State<MyApp> {
                             });
                           });
                         } catch (e) {
-                          print(e);
+                          debugPrint(e.toString());
                         }
 
                         sstpFlutterPlugin.onResult(
@@ -123,13 +124,13 @@ class _MyAppState extends State<MyApp> {
                               });
                             },
                             onConnectingResult: () {
-                              print("onConnectingResult");
+                              debugPrint("onConnectingResult");
                               setState(() {
                                 connectionStatus = "connecting";
                               });
                             },
                             onDisconnectedResult: () {
-                              print("onDisconnectedResult");
+                              debugPrint("onDisconnectedResult");
                               setState(() {
                                 connectionStatus = "disconnected";
                                 downSpeed = 0.0;
@@ -138,20 +139,20 @@ class _MyAppState extends State<MyApp> {
                             },
                             onError: () {});
                       },
-                      child: Text("Connect")),
+                      child: const Text("Connect")),
                   ElevatedButton(
                       onPressed: () async {
                         await sstpFlutterPlugin.disconnect();
                       },
-                      child: Text("Disconnect"))
+                      child: const Text("Disconnect"))
                 ],
               ),
               ElevatedButton(
                   onPressed: () async {
-                    cert_dir = await sstpFlutterPlugin.addCertificate();
+                    certDir = await sstpFlutterPlugin.addCertificate();
                     setState(() {});
                   },
-                  child: Text("Certificate"))
+                  child: const Text("Certificate"))
             ],
           ),
         )),

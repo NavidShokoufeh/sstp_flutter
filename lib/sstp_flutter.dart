@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sstp_flutter/src/core/Utils/utils.dart';
 import 'package:sstp_flutter/sstp_timer.dart';
@@ -78,7 +79,7 @@ class SstpFlutter {
     try {
       await channelHandler.vpnPermission();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -90,7 +91,7 @@ class SstpFlutter {
       var caller = await channelHandler.connectVpn();
       return caller;
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       rethrow;
     }
   }

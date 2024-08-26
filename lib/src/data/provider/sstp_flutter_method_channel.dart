@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sstp_flutter/app_info.dart';
@@ -17,7 +18,7 @@ class MethodChannelSstpFlutter {
     try {
       await methodChannelCaller.invokeMethod("connect");
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -26,7 +27,7 @@ class MethodChannelSstpFlutter {
     try {
       await methodChannelCaller.invokeMethod("disconnect");
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -40,7 +41,7 @@ class MethodChannelSstpFlutter {
     try {
       await methodChannelCaller.invokeMethod("takePermission");
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -102,13 +103,13 @@ class MethodChannelSstpFlutter {
         "password": server.password,
         "verifyHostName": server.verifyHostName,
         "useTrustedCert": server.useTrustedCert,
-        "sslVersion": server.sslVersion ?? "DEFAULT",
+        "sslVersion": server.sslVersion,
         "showDisconnectOnNotification": server.showDisconnectOnNotification,
         "notificationText": server.notificationText
       });
-      print(res);
+      debugPrint(res);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
