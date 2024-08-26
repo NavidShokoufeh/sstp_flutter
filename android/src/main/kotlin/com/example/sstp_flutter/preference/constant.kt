@@ -15,6 +15,7 @@ enum class OscPrefKey {
     SSL_PORT,
     SSL_VERSION,
     SSL_DO_VERIFY,
+    SSL_DO_VERIFY_CERT,
     SSL_DO_ADD_CERT,
     SSL_CERT_DIR,
     SSL_DO_SELECT_SUITES,
@@ -62,7 +63,8 @@ enum class OscPrefKey {
 internal val DEFAULT_BOOLEAN_MAP = mapOf(
     OscPrefKey.ROOT_STATE to false,
     OscPrefKey.HOME_CONNECTOR to false,
-    OscPrefKey.SSL_DO_VERIFY to true,
+    OscPrefKey.SSL_DO_VERIFY to false,
+    OscPrefKey.SSL_DO_VERIFY_CERT to false,
     OscPrefKey.SSL_DO_ADD_CERT to false,
     OscPrefKey.SSL_DO_SELECT_SUITES to false,
     OscPrefKey.PROXY_DO_USE_PROXY to false,

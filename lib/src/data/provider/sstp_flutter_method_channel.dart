@@ -102,6 +102,7 @@ class MethodChannelSstpFlutter {
         "userName": server.username,
         "password": server.password,
         "verifyHostName": server.verifyHostName,
+        "verifySSLCert": server.verifySSLCert,
         "useTrustedCert": server.useTrustedCert,
         "sslVersion": server.sslVersion,
         "showDisconnectOnNotification": server.showDisconnectOnNotification,

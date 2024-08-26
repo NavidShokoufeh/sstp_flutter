@@ -230,6 +230,7 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
     val password = call.argument<String>("password")
     val sslPort = call.argument<Int>("sslPort")
     val verifyHostName = call.argument<Boolean>("verifyHostName")
+    val verifySSLCert = call.argument<Boolean>("verifySSLCert")
     val useTrustedCert = call.argument<Boolean>("useTrustedCert")
     val sslVersion = call.argument<String>("sslVersion")
     val showDisconnectOnNotification = call.argument<Boolean>("showDisconnectOnNotification")
@@ -264,11 +265,9 @@ class SstpFlutterPlugin: FlutterPlugin, MethodCallHandler , ActivityAware, Flutt
         "", OscPrefKey.NotificationText,prefs
       )
     }
-    if (verifyHostName == true){
-      setBooleanPrefValue(true,OscPrefKey.SSL_DO_VERIFY,prefs)
-    }else{
-      setBooleanPrefValue(false,OscPrefKey.SSL_DO_VERIFY,prefs)
-    }
+
+    setBooleanPrefValue(verifyHostName == true,OscPrefKey.SSL_DO_VERIFY,prefs)
+    setBooleanPrefValue(verifySSLCert == true,OscPrefKey.SSL_DO_VERIFY_CERT,prefs)
   }
 
   private fun startVpnService(

@@ -27,6 +27,8 @@ import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
+import java.security.SecureRandom
+import javax.net.ssl.X509TrustManager
 
 
 private const val HTTP_DELIMITER = "\r\n"
@@ -94,14 +96,36 @@ internal class SSLTerminal(private val bridge: ClientBridge) {
     }
 
     private suspend fun startHandshake(): Boolean {
-        val sslContext = if (getBooleanPrefValue(OscPrefKey.SSL_DO_ADD_CERT, bridge.prefs)) {
-            SSLContext.getInstance(selectedVersion).also {
-                it.init(null, createTrustManagers(), null)
+        val sslContext: SSLContext
+
+        if (getBooleanPrefValue(OscPrefKey.SSL_DO_VERIFY_CERT, bridge.prefs)) {
+            sslContext = if (getBooleanPrefValue(OscPrefKey.SSL_DO_ADD_CERT, bridge.prefs)) {
+                SSLContext.getInstance(selectedVersion).also {
+                    it.init(null, createTrustManagers(), null)
+                }
+            } else {
+                SSLContext.getDefault()
             }
         } else {
-            SSLContext.getDefault()
-        }
+            sslContext = SSLContext.getInstance(selectedVersion)
+            sslContext.init(null, arrayOf<TrustManager>(object : X509TrustManager {
+                override fun getAcceptedIssuers(): Array<X509Certificate> {
+                    return arrayOf()
+                }
 
+                override fun checkClientTrusted(
+                    certs: Array<X509Certificate>,
+                    authType: String
+                ) {
+                }
+
+                override fun checkServerTrusted(
+                    certs: Array<X509Certificate>,
+                    authType: String
+                ) {
+                }
+            }), SecureRandom())
+        }
         engine = sslContext.createSSLEngine(sslHostname, sslPort)
         engine.useClientMode = true
 
