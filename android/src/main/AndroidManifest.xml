@@ -23,7 +23,6 @@
             android:name=".service.SstpVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE"
             android:enabled="true"
-            android:foregroundServiceType="specialUse" 
             android:persistent="true">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
@@ -34,7 +33,6 @@
          <service
             android:exported="true"
             android:name=".service.SstpTileService"
-            android:foregroundServiceType="specialUse"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
