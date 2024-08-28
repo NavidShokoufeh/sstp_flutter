@@ -3,25 +3,25 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sstp_flutter/src/core/Utils/utils.dart';
-import 'package:sstp_flutter/sstp_timer.dart';
 import 'package:sstp_flutter/traffic.dart';
 import 'package:sstp_flutter/app_info.dart';
 import 'package:sstp_flutter/proxy.dart';
 import 'package:sstp_flutter/server.dart';
 import 'package:sstp_flutter/src/data/provider/sstp_flutter_method_channel.dart';
 
-typedef OnConnected = Function(ConnectionTraffic);
+typedef OnConnected = Function(ConnectionTraffic traffic, Duration duration);
 typedef OnConnecting = void Function();
 typedef OnDisconnected = void Function();
 typedef OnError = Function();
 
 class SstpFlutter {
+  Timer? _timer;
+  int _downloadSpeed = 0;
+  int _uploadSpeed = 0;
+  int _totalDownload = 0;
+  int _totalUpload = 0;
   MethodChannelSstpFlutter channelHandler = MethodChannelSstpFlutter();
-  final SSTPTimer _sstpTimer = SSTPTimer();
-
-  final StreamController<Duration?> _connectionTimerStream =
-      StreamController<Duration?>();
-  Stream<Duration?> get timer => _connectionTimerStream.stream;
+  OnConnected? onConnectedResult;
 
   /// Gains result of current connection status
   /// [OnConnected] get invoked when [ConnectionTraffic] get updates
@@ -31,40 +31,56 @@ class SstpFlutter {
     OnDisconnected? onDisconnectedResult,
     OnError? onError,
   }) async {
+    this.onConnectedResult = onConnectedResult;
     MethodChannel channel = const MethodChannel("responseReceiver");
-    ConnectionTraffic traffic = ConnectionTraffic();
 
     Future methodCallReceiver(MethodCall call) async {
       var arg = call.arguments;
 
       if (call.method == 'connectResponse') {
         if (arg["status"] == SSTPConnectionStatusKeys.CONNECTED) {
-          _sstpTimer.saveConnectionTime(
-              day: DateTime.now().day.toString(),
-              hour: DateTime.now().hour.toString(),
-              minute: DateTime.now().minute.toString(),
-              second: DateTime.now().second.toString());
-          _sstpTimer.startTimer(_connectionTimerStream);
-          onConnectedResult!(traffic);
+          _timer = Timer.periodic(
+            const Duration(seconds: 1),
+            (timer) {
+              onConnectedResult!(
+                ConnectionTraffic(
+                  totalDownloadTraffic: _totalDownload,
+                  totalUploadTraffic: _totalUpload,
+                  downloadTraffic: _downloadSpeed,
+                  uploadTraffic: _uploadSpeed,
+                ),
+                Duration(seconds: timer.tick),
+              );
+              _uploadSpeed = 0;
+              _downloadSpeed = 0;
+            },
+          );
+          onConnectedResult!(ConnectionTraffic(), Duration.zero);
         } else if (arg["status"] == SSTPConnectionStatusKeys.CONNECTING) {
+          _timer?.cancel();
+          _timer = null;
+          _downloadSpeed = 0;
+          _uploadSpeed = 0;
+          _totalDownload = 0;
+          _totalUpload = 0;
           onConnectingResult!();
         } else if (arg["status"] == SSTPConnectionStatusKeys.DISCONNECTED) {
+          _timer?.cancel();
+          _timer = null;
+          _downloadSpeed = 0;
+          _uploadSpeed = 0;
+          _totalDownload = 0;
+          _totalUpload = 0;
           onDisconnectedResult!();
-          _sstpTimer.saveConnectionTime();
-          _sstpTimer.stopTimer(_connectionTimerStream);
           bool? error = arg["error"];
           if (error != null && error) onError!();
         }
       } else if (call.method == 'downloadSpeed') {
-        onConnectedResult!(ConnectionTraffic(
-          downloadTraffic: call.arguments[0],
-          totalDownloadTraffic: call.arguments[1],
-        ));
+        _downloadSpeed += call.arguments[0] as int;
+        _totalDownload = call.arguments[1] as int;
       } else if (call.method == 'uploadSpeed') {
-        onConnectedResult!(ConnectionTraffic(
-          uploadTraffic: call.arguments[0],
-          totalUploadTraffic: call.arguments[1],
-        ));
+        _uploadSpeed += call.arguments[0] as int;
+        _totalUpload = call.arguments[1] as int;
       }
     }
 
@@ -182,11 +198,29 @@ class SstpFlutter {
   Future<String> checkLastConnectionStatus() async {
     String status = await channelHandler.checkLastConnectionStatus();
     if (status.toString() == SSTPConnectionStatusKeys.CONNECTED) {
-      _sstpTimer.measureConnectedTime().then((value) {
-        _sstpTimer.startTimer(_connectionTimerStream);
-      });
+      _timer = Timer.periodic(
+        const Duration(seconds: 1),
+        (timer) {
+          onConnectedResult?.call(
+            ConnectionTraffic(
+              totalDownloadTraffic: _totalDownload,
+              totalUploadTraffic: _totalUpload,
+              downloadTraffic: _downloadSpeed,
+              uploadTraffic: _uploadSpeed,
+            ),
+            Duration(seconds: timer.tick),
+          );
+          _uploadSpeed = 0;
+          _downloadSpeed = 0;
+        },
+      );
     } else {
-      _sstpTimer.saveConnectionTime();
+      _timer?.cancel();
+      _timer = null;
+      _downloadSpeed = 0;
+      _uploadSpeed = 0;
+      _totalDownload = 0;
+      _totalUpload = 0;
     }
     return status;
   }

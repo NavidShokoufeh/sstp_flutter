@@ -192,13 +192,13 @@ internal class IPTerminal(private val bridge: ClientBridge) {
     private suspend fun logDownloadSpeed(downloadSpeedKb: Double, bytes: Int) {
         val roundedDownloadSpeed = String.format("%.2f", downloadSpeedKb)
         totalDownload += bytes
-        FlutterCaller().DownloadSpeed(bytes, totalDownload)
+        FlutterCaller().DownloadSpeed(bytes * 8, totalDownload * 8)
     }
 
     private suspend fun logUploadSpeed(uploadSpeedKb: Double, bytes: Int) {
         val roundedUploadSpeed = String.format("%.2f", uploadSpeedKb)
         totalUpload += bytes
-        FlutterCaller().UploadSpeed(bytes, totalUpload)
+        FlutterCaller().UploadSpeed(bytes * 8, totalUpload * 8)
     }
 
 

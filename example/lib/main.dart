@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sstp_flutter/server.dart';
 import 'package:sstp_flutter/ssl_versions.dart';
 import 'package:sstp_flutter/sstp_flutter.dart';
-import 'package:sstp_flutter/traffic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,14 +57,14 @@ class _MyAppState extends State<MyApp> {
                   Text("download Speed : $downSpeed KBps"),
                   Text("upload Speed : $downSpeed KBps"),
                   Text("certificate dir : $certDir"),
-                  StreamBuilder(
-                      initialData: const Duration(),
-                      stream: sstpFlutterPlugin.timer,
-                      builder: (context, timerx) {
-                        return timerx.hasData
-                            ? Text("connection time : ${timerx.data}")
-                            : const Text("connection time :no Data");
-                      })
+                  // StreamBuilder(
+                  //     initialData: const Duration(),
+                  //     stream: sstpFlutterPlugin.timer,
+                  //     builder: (context, timerx) {
+                  //       return timerx.hasData
+                  //           ? Text("connection time : ${timerx.data}")
+                  //           : const Text("connection time :no Data");
+                  //     })
                 ],
               ),
               TextField(
@@ -117,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                         }
 
                         sstpFlutterPlugin.onResult(
-                            onConnectedResult: (ConnectionTraffic traffic) {
+                            onConnectedResult: (traffic, duration) {
                               setState(() {
                                 connectionStatus = "connected";
                                 downSpeed = traffic.downloadTraffic ?? 0;
