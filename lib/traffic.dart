@@ -1,7 +1,14 @@
 class ConnectionTraffic {
-  double downloadTraffic;
-  double uploadTraffic;
+  int? downloadTraffic;
+  int? totalDownloadTraffic;
+  int? uploadTraffic;
+  int? totalUploadTraffic;
 
-  ConnectionTraffic(
-      {required this.downloadTraffic, required this.uploadTraffic});
+
+  ConnectionTraffic({
+    this.downloadTraffic,
+    this.totalDownloadTraffic,
+    this.uploadTraffic,
+    this.totalUploadTraffic,
+  });
 }

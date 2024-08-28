@@ -19,8 +19,8 @@ class _MyAppState extends State<MyApp> {
   final sstpFlutterPlugin = SstpFlutter();
   var connectionStatus = "disconnected";
   var certDir = "none";
-  var downSpeed = 0.0;
-  var upSpeed = 0.0;
+  var downSpeed = 0;
+  var upSpeed = 0;
 
   TextEditingController hostNameController = TextEditingController();
   TextEditingController sslPortController = TextEditingController();
@@ -120,8 +120,8 @@ class _MyAppState extends State<MyApp> {
                             onConnectedResult: (ConnectionTraffic traffic) {
                               setState(() {
                                 connectionStatus = "connected";
-                                downSpeed = traffic.downloadTraffic;
-                                upSpeed = traffic.uploadTraffic;
+                                downSpeed = traffic.downloadTraffic ?? 0;
+                                upSpeed = traffic.uploadTraffic ?? 0;
                               });
                             },
                             onConnectingResult: () {
@@ -134,8 +134,8 @@ class _MyAppState extends State<MyApp> {
                               debugPrint("onDisconnectedResult");
                               setState(() {
                                 connectionStatus = "disconnected";
-                                downSpeed = 0.0;
-                                upSpeed = 0.0;
+                                downSpeed = 0;
+                                upSpeed = 0;
                               });
                             },
                             onError: () {});

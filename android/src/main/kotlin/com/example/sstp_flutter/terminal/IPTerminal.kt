@@ -30,8 +30,13 @@ internal class IPTerminal(private val bridge: ClientBridge) {
     private val isCustomDNSServerUsed = getBooleanPrefValue(OscPrefKey.DNS_DO_USE_CUSTOM_SERVER, bridge.prefs)
     private val isCustomRoutesAdded = getBooleanPrefValue(OscPrefKey.ROUTE_DO_ADD_CUSTOM_ROUTES, bridge.prefs)
 
+    private var totalDownload = 0;
+    private var totalUpload = 0;
+
     @SuppressLint("NewApi")
     internal suspend fun initialize() {
+        totalDownload = 0;
+        totalUpload = 0;
         if (bridge.PPP_IPv4_ENABLED) {
             if (bridge.currentIPv4.isSame(ByteArray(4))) {
                 bridge.controlMailbox.send(ControlMessage(Where.IPv4, Result.ERR_INVALID_ADDRESS))
@@ -156,7 +161,7 @@ internal class IPTerminal(private val bridge: ClientBridge) {
         // Calculate and log download speed based on the packet size and elapsed time
         if (elapsedTimeMillis > 0) {
             val downloadSpeedKb = calculateSpeedKb(size, elapsedTimeMillis)
-            logDownloadSpeed(downloadSpeedKb)
+            logDownloadSpeed(downloadSpeedKb, size)
         }
     }
 
@@ -172,7 +177,7 @@ internal class IPTerminal(private val bridge: ClientBridge) {
 
         if (elapsedTimeMillis > 0) {
             val uploadSpeedKb = calculateSpeedKb(bytesRead, elapsedTimeMillis)
-            logUploadSpeed(uploadSpeedKb)
+            logUploadSpeed(uploadSpeedKb, bytesRead)
         }
     }
 
@@ -184,18 +189,22 @@ internal class IPTerminal(private val bridge: ClientBridge) {
         return speedKbps
     }
 
-    private suspend fun logDownloadSpeed(downloadSpeedKb: Double) {
+    private suspend fun logDownloadSpeed(downloadSpeedKb: Double, bytes: Int) {
         val roundedDownloadSpeed = String.format("%.2f", downloadSpeedKb)
-        FlutterCaller().DownloadSpeed(roundedDownloadSpeed)
+        totalDownload += bytes
+        FlutterCaller().DownloadSpeed(bytes, totalDownload)
     }
 
-    private suspend fun logUploadSpeed(uploadSpeedKb: Double) {
+    private suspend fun logUploadSpeed(uploadSpeedKb: Double, bytes: Int) {
         val roundedUploadSpeed = String.format("%.2f", uploadSpeedKb)
-        FlutterCaller().UploadSpeed(roundedUploadSpeed)
+        totalUpload += bytes
+        FlutterCaller().UploadSpeed(bytes, totalUpload)
     }
 
 
     internal fun close() {
+        totalDownload = 0;
+        totalUpload = 0;
         fd?.close()
     }
 }

@@ -25,16 +25,14 @@ class SstpFlutter {
 
   /// Gains result of current connection status
   /// [OnConnected] get invoked when [ConnectionTraffic] get updates
-  Future onResult(
-      {OnConnected? onConnectedResult,
-      OnConnecting? onConnectingResult,
-      OnDisconnected? onDisconnectedResult,
-      OnError? onError}) async {
+  Future onResult({
+    OnConnected? onConnectedResult,
+    OnConnecting? onConnectingResult,
+    OnDisconnected? onDisconnectedResult,
+    OnError? onError,
+  }) async {
     MethodChannel channel = const MethodChannel("responseReceiver");
-    double downloadTraffic = 0;
-    double uploadTraffic = 0;
-    ConnectionTraffic traffic = ConnectionTraffic(
-        downloadTraffic: downloadTraffic, uploadTraffic: uploadTraffic);
+    ConnectionTraffic traffic = ConnectionTraffic();
 
     Future methodCallReceiver(MethodCall call) async {
       var arg = call.arguments;
@@ -58,15 +56,15 @@ class SstpFlutter {
           if (error != null && error) onError!();
         }
       } else if (call.method == 'downloadSpeed') {
-        downloadTraffic = double.parse(call.arguments);
-        traffic = ConnectionTraffic(
-            downloadTraffic: downloadTraffic, uploadTraffic: uploadTraffic);
-        onConnectedResult!(traffic);
+        onConnectedResult!(ConnectionTraffic(
+          downloadTraffic: call.arguments[0],
+          totalDownloadTraffic: call.arguments[1],
+        ));
       } else if (call.method == 'uploadSpeed') {
-        uploadTraffic = double.parse(call.arguments);
-        traffic = ConnectionTraffic(
-            downloadTraffic: downloadTraffic, uploadTraffic: uploadTraffic);
-        onConnectedResult!(traffic);
+        onConnectedResult!(ConnectionTraffic(
+          uploadTraffic: call.arguments[0],
+          totalUploadTraffic: call.arguments[1],
+        ));
       }
     }
 
