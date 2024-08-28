@@ -251,7 +251,7 @@ internal class SstpVpnService : VpnService() {
             it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setAutoCancel(true)
             it.setSmallIcon(R.drawable.baseline_vpn_key_24)
-            it.setContentText(notificationText)
+            it.setContentTitle(notificationText)
             if(showNotification){
                 it.addAction(0, "DISCONNECT", pendingIntent)
             }
