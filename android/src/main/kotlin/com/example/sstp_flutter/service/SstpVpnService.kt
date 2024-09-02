@@ -256,8 +256,11 @@ internal class SstpVpnService : VpnService() {
                 it.addAction(0, "DISCONNECT", pendingIntent)
             }
         }
-
-        startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_DISCONNECT_ID, builder.build(), 1)
+        } else {
+            startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
+        }
     }
 
     internal fun makeNotification(id: Int, message: String) {
