@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sstp_flutter/server.dart';
 import 'package:sstp_flutter/ssl_versions.dart';
 import 'package:sstp_flutter/sstp_flutter.dart';
+import 'package:sstp_flutter/traffic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class _MyAppState extends State<MyApp> {
   var certDir = "none";
   var downSpeed = 0;
   var upSpeed = 0;
+  Duration connectionTimer = const Duration();
 
   TextEditingController hostNameController = TextEditingController();
   TextEditingController sslPortController = TextEditingController();
@@ -42,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Flutter SSTP example app'),
         ),
         body: Center(
             child: Padding(
@@ -57,14 +59,7 @@ class _MyAppState extends State<MyApp> {
                   Text("download Speed : $downSpeed KBps"),
                   Text("upload Speed : $downSpeed KBps"),
                   Text("certificate dir : $certDir"),
-                  // StreamBuilder(
-                  //     initialData: const Duration(),
-                  //     stream: sstpFlutterPlugin.timer,
-                  //     builder: (context, timerx) {
-                  //       return timerx.hasData
-                  //           ? Text("connection time : ${timerx.data}")
-                  //           : const Text("connection time :no Data");
-                  //     })
+                  Text("connection time : $connectionTimer"),
                 ],
               ),
               TextField(
@@ -116,8 +111,10 @@ class _MyAppState extends State<MyApp> {
                         }
 
                         sstpFlutterPlugin.onResult(
-                            onConnectedResult: (traffic, duration) {
+                            onConnectedResult:
+                                (ConnectionTraffic traffic, Duration duration) {
                               setState(() {
+                                connectionTimer = duration;
                                 connectionStatus = "connected";
                                 downSpeed = traffic.downloadTraffic ?? 0;
                                 upSpeed = traffic.uploadTraffic ?? 0;

@@ -1,3 +1,6 @@
+## 1.1.0
+* [fix] https://github.com/NavidShokoufeh/sstp_flutter/issues/1 and several problems that developers faced. Find more info in https://github.com/NavidShokoufeh/sstp_flutter/pull/11
+
 ## 1.0.9
 * [fix] bug reported in https://github.com/NavidShokoufeh/sstp_flutter/issues/8 
 

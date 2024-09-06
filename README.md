@@ -35,41 +35,56 @@ void main() async {
 
   // Take VPN permission
   await sstpFlutter.takePermission();
-
-  // Save server data
-  await sstpFlutter.saveServerData(server: SSTPServer(host: 'example.com',port:443 , username: 'user', password: 'password',verifyHostName : false, useTrustedCert: false, sslVersion: SSLVersions.DEFAULT, showDisconnectOnNotification: true, notificationText: "Notification Text Holder"));
+  
+  // Create an SSTP server object
+  SSTPServer server = SSTPServer(
+    host: 'example.com',
+    port: 443,
+    username: 'test.user',
+    password: 'test.pass',
+    verifyHostName: false,
+    useTrustedCert: false,
+    verifySSLCert: false,
+    sslVersion: SSLVersions.TLSv1_1,
+    showDisconnectOnNotification: true,
+    notificationText: "Notification Text Holder",
+    );
+  
+  // Save created SSTP server
+  await sstpFlutter.saveServerData(server: server);
 
   // Opens files and then returns selected directory path
-  cert_dir = await sstpFlutterPlugin.addCertificate();
+  certDir = await sstpFlutterPlugin.addCertificate();
 
   // Connect to SSTP VPN
   await sstpFlutter.connectVpn();
 
   // Monitor connection status
-  sstpFlutter.onResult(
-    onConnectedResult: (ConnectionTraffic traffic) {
-      print('Connected - Download Traffic: ${traffic.downloadTraffic}, Upload Traffic: ${traffic.uploadTraffic}');
+  sstpFlutterPlugin.onResult(
+   onConnectedResult: (ConnectionTraffic traffic, Duration duration) {
+    setState(() {
+      connectionTimer = duration;
+      connectionStatus = "connected";
+      downSpeed = traffic.downloadTraffic ?? 0;
+      upSpeed = traffic.uploadTraffic ?? 0;
+      });
     },
-    onConnectingResult: () {
-      print('Connecting...');
+   onConnectingResult: () {
+    debugPrint("onConnectingResult");
+    setState(() {å
+     connectionStatus = "connecting";
+     });
     },
-    onDisconnectedResult: () {
-      print('Disconnected');
+   onDisconnectedResult: () {
+    debugPrint("onDisconnectedResult");
+    setState(() {
+     connectionStatus = "disconnected";
+     downSpeed = 0;
+     upSpeed = 0;
+     });
     },
-    onError: () {
-      print('Error occurred');
-    },
-  );
+   onError: () {});
 
-  // Monitor connection Duration
-  StreamBuilder(
-  initialData: const Duration(),
-  stream: sstpFlutterPlugin.timer,
-  builder: (context, timer) {
-    return timer.hasData
-        ? Text("connection time : ${timer.data}")
-        : const Text("connection time :no Data");
-   })
 
   // Disconnect from SSTP VPN
   await sstpFlutter.disconnect();
