@@ -24,16 +24,16 @@ fun connect(){
         flutterChannel.invokeMethod("connectResponse", tempMap)
     }
 
-    suspend fun DownloadSpeed(downloadSpeed : String){
+    suspend fun DownloadSpeed(downloadSpeed : Int, totalDownload : Int){
         withContext(Dispatchers.Main) {
-            flutterChannel.invokeMethod("downloadSpeed",downloadSpeed )
+            flutterChannel.invokeMethod("downloadSpeed",listOf(downloadSpeed, totalDownload) )
         }
 
     }
 
-    suspend fun UploadSpeed(uploadSpeed : String  ){
+    suspend fun UploadSpeed(uploadSpeed : Int, totalUpload : Int){
         withContext(Dispatchers.Main) {
-            flutterChannel.invokeMethod("uploadSpeed",uploadSpeed )
+            flutterChannel.invokeMethod("uploadSpeed", listOf(uploadSpeed, totalUpload))
         }
 
     }

@@ -250,14 +250,17 @@ internal class SstpVpnService : VpnService() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_NAME).also {
             it.priority = NotificationCompat.PRIORITY_DEFAULT
             it.setAutoCancel(true)
-//            it.setSmallIcon(R.drawable.flutterlogo)
-            it.setContentText(notificationText)
+            it.setSmallIcon(R.drawable.baseline_vpn_key_24)
+            it.setContentTitle(notificationText)
             if(showNotification){
                 it.addAction(0, "DISCONNECT", pendingIntent)
             }
         }
-
-        startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_DISCONNECT_ID, builder.build(), 1)
+        } else {
+            startForeground(NOTIFICATION_DISCONNECT_ID, builder.build())
+        }
     }
 
     internal fun makeNotification(id: Int, message: String) {
