@@ -22,9 +22,12 @@ class SstpFlutter {
   int _totalUpload = 0;
   MethodChannelSstpFlutter channelHandler = MethodChannelSstpFlutter();
   OnConnected? onConnectedResult;
+  MethodChannel channel = const MethodChannel("responseReceiver");
 
   /// Gains result of current connection status
   /// [OnConnected] get invoked when [ConnectionTraffic] get updates
+  ///
+  /// NOTE: download and upload speed is under development on iOS
   Future onResult({
     OnConnected? onConnectedResult,
     OnConnecting? onConnectingResult,
@@ -32,7 +35,6 @@ class SstpFlutter {
     OnError? onError,
   }) async {
     this.onConnectedResult = onConnectedResult;
-    MethodChannel channel = const MethodChannel("responseReceiver");
 
     Future methodCallReceiver(MethodCall call) async {
       var arg = call.arguments;
@@ -120,6 +122,7 @@ class SstpFlutter {
   }
 
   /// Returns all installed apps on user's device
+  /// WARNING : it's available only on Android
   Future<List<InstalledAppInfo>> getInstalledApps() async {
     List<InstalledAppInfo> apps = await channelHandler.getInstalledApps();
     return apps;
@@ -130,6 +133,8 @@ class SstpFlutter {
   /// These packages are allowed to get tunneled , except that they're not getting tunneled
   ///
   /// fixed bug reported in : [https://github.com/NavidShokoufeh/sstp_flutter/issues/8]
+  ///
+  /// WARNING : it's available only on Android
   Future<List<String>> getAllowedApps() async {
     List<String> packages = await channelHandler.getAllowedApps();
     return packages;
@@ -137,6 +142,8 @@ class SstpFlutter {
 
   /// Adds provided List of package names to allowed apps to get tunneled
   /// you can simply get installed apps package names using [getInstalledApps]
+  ///
+  /// WARNING : it's available only on Android
   Future addToAllowedApps({required List<String> packages}) async {
     try {
       await channelHandler.addToAllowedApps(packages);
@@ -157,6 +164,8 @@ class SstpFlutter {
 
   /// Disables dns for provided connection
   /// Note : dns will be disabled for next connection, not current one
+  ///
+  /// WARNING : it's available only on Android
   Future disableDNS() async {
     try {
       await channelHandler.disableDNS();
@@ -167,6 +176,8 @@ class SstpFlutter {
 
   /// Enables proxy for provided connection
   /// Note : the provided proxy will be use for next connection, not current one
+  ///
+  /// WARNING : it's available only on Android
   Future enableProxy({required SSTPProxy proxy}) async {
     try {
       await channelHandler.enableProxy(proxy: proxy);
@@ -177,6 +188,8 @@ class SstpFlutter {
 
   /// Disables proxy for provided connection
   /// Note : proxy will be disabled for next connection, not current one
+  ///
+  /// WARNING : it's available only on Android
   Future disableProxy() async {
     try {
       await channelHandler.disableProxy();
@@ -226,6 +239,8 @@ class SstpFlutter {
   }
 
   /// Opens files and then returns selected directory path
+  ///
+  /// WARNING : it's available only on Android
   Future<String> addCertificate() async {
     String caller = await channelHandler.addCertificate();
     return caller;
