@@ -1,0 +1,29 @@
+PODS:
+  - Flutter (1.0.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - sstp_flutter (1.0.0):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sstp_flutter (from `.symlinks/plugins/sstp_flutter/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  sstp_flutter:
+    :path: ".symlinks/plugins/sstp_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sstp_flutter: aeac96b1f74ddbe5882b753ac33ac6d88a76c454
+
+PODFILE CHECKSUM: f19074666637eb420947b5401649404e7c85fd6b
+
+COCOAPODS: 1.15.2

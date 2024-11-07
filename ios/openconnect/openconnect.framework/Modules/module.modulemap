@@ -1,0 +1,6 @@
+framework module openconnect {
+  umbrella header "openconnect.h"
+  export *
+
+  module * { export * }
+}
