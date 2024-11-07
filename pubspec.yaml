@@ -5,6 +5,7 @@ homepage: https://github.com/NavidShokoufeh/sstp_flutter
 
 platforms:
   android:
+  ios:
 
 environment:
   sdk: '>=3.1.2 <4.0.0'
@@ -27,5 +28,7 @@ flutter:
     platforms:
       android:
         package: com.example.sstp_flutter
+        pluginClass: SstpFlutterPlugin
+      ios:
         pluginClass: SstpFlutterPlugin
 
