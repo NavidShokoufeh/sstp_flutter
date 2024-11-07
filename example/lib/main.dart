@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sstp_flutter/android_configuration_sstp.dart';
+import 'package:sstp_flutter/ios_configuration_sstp.dart';
 import 'package:sstp_flutter/server.dart';
 import 'package:sstp_flutter/ssl_versions.dart';
 import 'package:sstp_flutter/sstp_flutter.dart';
@@ -85,18 +87,27 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         SSTPServer server = SSTPServer(
                           host: hostNameController.text,
-                          port: int.parse(sslPortController.text),
+                          port: 443,
                           username: userNameController.text,
                           password: passController.text,
-                          verifyHostName: false,
-                          useTrustedCert: false,
-                          verifySSLCert: false,
-                          sslVersion: SSLVersions.TLSv1_1,
-                          showDisconnectOnNotification: true,
-                          notificationText: "Notification Text Holder",
+                          androidConfiguration: SSTPAndroidConfiguration(
+                            verifyHostName: false,
+                            useTrustedCert: false,
+                            verifySSLCert: false,
+                            sslVersion: SSLVersions.TLSv1_1,
+                            showDisconnectOnNotification: true,
+                            notificationText: "Notification Text Holder",
+                          ),
+                          iosConfiguration: SSTPIOSConfiguration(
+                            enableMSCHAP2: true,
+                            enableCHAP: false,
+                            enablePAP: false,
+                            enableTLS: false,
+                          ),
                         );
 
                         try {
+                          await sstpFlutterPlugin.takePermission();
                           await sstpFlutterPlugin
                               .takePermission()
                               .then((value) async {
