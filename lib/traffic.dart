@@ -4,7 +4,6 @@ class ConnectionTraffic {
   int? uploadTraffic;
   int? totalUploadTraffic;
 
-
   ConnectionTraffic({
     this.downloadTraffic,
     this.totalDownloadTraffic,
