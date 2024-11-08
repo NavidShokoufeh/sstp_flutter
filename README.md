@@ -52,7 +52,10 @@ $(SRCROOT)/.symlinks/plugins/sstp_flutter/ios/ext
 $(SRCROOT)/.symlinks/plugins/sstp_flutter/ios/openconnect
 ```
 
-<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/3.png?raw=true'>
+### <b>5. Copy Paste</b>
+
+Open sstp_extension > PacketTunnelProvider.m and copy paste this script <a href="https://raw.githubusercontent.com/NavidShokoufeh/sstp_flutter/refs/heads/main/example/ios/sstp_extension/PacketTunnelProvider.m">PacketTunnelProvider.m</a>
+
 
 ## Example
 

@@ -1,3 +1,9 @@
+## 1.2.0+hotfix.2
+* [fix] hotfix on readme :)
+
+## 1.2.0+hotfix.1
+* [fix] hotfix on readme
+
 ## 1.2.0
 * [add] add ios version!
 
