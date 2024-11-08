@@ -29,13 +29,13 @@ Then, run `flutter pub get` to install the dependency.
 ### <b>1. Add Capabillity</b>
 Add <b>Network Extensions</b> capabillity on Runner's Target and enable <b>Packet Tunnel</b>
 
-<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/1.png'>
+<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/1.png?raw=true'>
 
 ### <b>2. Add New Target</b>
 
 Click + button on bottom left, Choose <b>NETWORK EXTENSION</b>. And set <b>Language</b> and <b>Provider  Type</b> to <b>Objective-C</b> and <b>Packet Tunnel</b> as image below.
 
-<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/2.png'>
+<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/2.png?raw=true'>
 
 ### <b>3. Add Capabillity to sstp_extension</b>
 
@@ -52,7 +52,7 @@ $(SRCROOT)/.symlinks/plugins/sstp_flutter/ios/ext
 $(SRCROOT)/.symlinks/plugins/sstp_flutter/ios/openconnect
 ```
 
-<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/3.png'>
+<img src ='https://github.com/NavidShokoufeh/sstp_flutter/blob/main/example/sc/3.png?raw=true'>
 
 ## Example
 
