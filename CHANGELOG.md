@@ -1,3 +1,6 @@
+## 1.2.0
+* [add] add ios version!
+
 ## 1.1.0
 * [fix] https://github.com/NavidShokoufeh/sstp_flutter/issues/1 and several problems that developers faced. Find more info in https://github.com/NavidShokoufeh/sstp_flutter/pull/11
 
