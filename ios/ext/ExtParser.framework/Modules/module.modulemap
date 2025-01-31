@@ -1,6 +1,0 @@
-framework module ExtParser {
-  umbrella header "ExtParser.h"
-  export *
-
-  module * { export * }
-}

@@ -5,11 +5,14 @@ PODS:
     - FlutterMacOS
   - sstp_flutter (1.0.0):
     - Flutter
+    - vpn_adapter_ios (~> 1.0.0)
+  - vpn_adapter_ios (1.0.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sstp_flutter (from `.symlinks/plugins/sstp_flutter/ios`)
+  - vpn_adapter_ios (from `https://github.com/NavidShokoufeh/vpn_adapter_ios.git`, tag `1.0.0`)
 
 EXTERNAL SOURCES:
   Flutter:
@@ -18,12 +21,21 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sstp_flutter:
     :path: ".symlinks/plugins/sstp_flutter/ios"
+  vpn_adapter_ios:
+    :git: https://github.com/NavidShokoufeh/vpn_adapter_ios.git
+    :tag: 1.0.0
+
+CHECKOUT OPTIONS:
+  vpn_adapter_ios:
+    :git: https://github.com/NavidShokoufeh/vpn_adapter_ios.git
+    :tag: 1.0.0
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  sstp_flutter: aeac96b1f74ddbe5882b753ac33ac6d88a76c454
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  sstp_flutter: 588ef6118b3646d536df0673bee7bf8547bab325
+  vpn_adapter_ios: ef856cbfebcb146e300ca1bb9857fc376101dc45
 
-PODFILE CHECKSUM: f19074666637eb420947b5401649404e7c85fd6b
+PODFILE CHECKSUM: 1451089d48a746aabb824e6067d4715fea57f22a
 
 COCOAPODS: 1.15.2

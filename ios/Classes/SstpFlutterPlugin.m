@@ -7,12 +7,12 @@
 
 #import "SstpFlutterPlugin.h"
 #import <ExtParser/ExtParser.h>
-#import "CheckConnectData.h"
-#import "NodeModel.h"
 #import <sys/sysctl.h>
 #import <net/if.h>
 #import <ifaddrs.h>
 #import <arpa/inet.h>
+#import <vpn_adapter_ios//CheckConnectData.h>
+#import <vpn_adapter_ios/NodeModel.h>
 
 @interface SstpFlutterPlugin ()
 
