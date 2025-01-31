@@ -1,3 +1,6 @@
+## 1.3.0
+* [fix] https://github.com/NavidShokoufeh/sstp_flutter/issues/15
+
 ## 1.2.0+hotfix.2
 * [fix] hotfix on readme :)
 
